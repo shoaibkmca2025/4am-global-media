@@ -18,10 +18,8 @@ const LayoutWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   const isDashboard = location.pathname.startsWith('/dashboard');
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-brand-dark text-gray-900 dark:text-white transition-colors duration-300 selection:bg-brand-primary selection:text-white">
+    <div className="min-h-screen transition-colors duration-300 selection:bg-brand-primary selection:text-white">
       <CustomCursor />
-      <div className="global-noise"></div>
-      <BackgroundParticles />
       
       <div className="relative z-10 flex flex-col min-h-screen">
         {!isDashboard && <Navbar />}
@@ -32,6 +30,7 @@ const LayoutWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
         {!isDashboard && <Footer />}
       </div>
+      <BackgroundParticles />
     </div>
   );
 };

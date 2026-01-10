@@ -5,39 +5,58 @@ const Philosophy: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 0.8", "end 0.5"]
+    offset: ["start 0.9", "end 0.1"]
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.2, 1]);
-  const y = useTransform(scrollYProgress, [0, 1], [50, 0]);
-
-  const words = "In a world of noise, we engineer the signal. We believe that true digital impact isn't just about visibility—it's about resonance. By fusing data-driven precision with human-centric creativity, we don't just capture attention; we command it.".split(" ");
+  const words = "In a world of noise, we engineer the signal. Impact isn't just visibility—it's resonance. We fuse data precision with human creativity to architect outcomes that don't just capture attention; they command it.".split(" ");
 
   return (
-    <section ref={containerRef} className="py-32 bg-gray-50 dark:bg-brand-dark relative overflow-hidden transition-colors duration-300">
-      {/* Background Accents */}
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-brand-primary/5 to-transparent pointer-events-none" />
+    <section ref={containerRef} className="py-64 bg-white dark:bg-brand-obsidian relative overflow-hidden transition-colors duration-500">
+      {/* Background Ambience Layers */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.04)_0%,transparent_60%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(59,130,246,0.04)_0%,transparent_60%)]" />
       
       <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <motion.div 
-            style={{ opacity, y }}
-            className="mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="mb-20 flex items-center gap-6"
           >
-            <span className="text-brand-primary font-bold tracking-widest uppercase text-sm mb-4 block">
-              Our Philosophy
+            <span className="text-brand-primary font-mono font-bold tracking-[0.5em] uppercase text-xs">
+              01 // CORE_PHILOSOPHY
             </span>
+            <div className="h-[1px] flex-1 bg-gray-200 dark:bg-white/5" />
           </motion.div>
 
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.1] flex flex-wrap gap-x-4 gap-y-2 text-gray-900 dark:text-white">
+          <h2 className="text-5xl md:text-8xl lg:text-[7rem] font-display font-bold leading-[0.95] flex flex-wrap gap-x-[0.3em] gap-y-2 text-gray-900 dark:text-white tracking-tighter transition-colors">
             {words.map((word, i) => {
-              const start = i / words.length;
-              const end = start + (1 / words.length);
+              const start = i / (words.length * 1.5);
+              const end = start + 0.15;
               return (
                 <Word key={i} word={word} progress={scrollYProgress} range={[start, end]} />
               );
             })}
           </h2>
+
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 1.5 }}
+            className="mt-32 grid grid-cols-1 md:grid-cols-3 gap-16 pt-16 border-t border-gray-200 dark:border-white/5"
+          >
+             {[
+               { label: 'Signal_Latency', value: '< 1.4ms', detail: 'Zero-lag growth architectures' },
+               { label: 'Data_Integrity', value: '100%', detail: 'Cryptographic result verification' },
+               { label: 'Network_Scale', value: 'Infinity', detail: 'Stateless node scalability' }
+             ].map((stat, idx) => (
+               <div key={idx} className="space-y-4">
+                 <p className="text-[10px] font-mono text-brand-primary uppercase tracking-[0.3em] font-bold">{stat.label}</p>
+                 <p className="text-5xl font-display font-bold text-gray-900 dark:text-white tracking-tighter transition-colors">{stat.value}</p>
+                 <p className="text-xs text-gray-500 font-medium tracking-wide leading-relaxed">{stat.detail}</p>
+               </div>
+             ))}
+          </motion.div>
         </div>
       </div>
     </section>
@@ -51,9 +70,15 @@ interface WordProps {
 }
 
 const Word: React.FC<WordProps> = ({ word, progress, range }) => {
-  const opacity = useTransform(progress, range, [0.1, 1]);
+  const opacity = useTransform(progress, range, [0.03, 1]);
+  const blur = useTransform(progress, range, ['15px', '0px']);
+  const y = useTransform(progress, range, ['20px', '0px']);
+
   return (
-    <motion.span style={{ opacity }} className="transition-colors duration-500">
+    <motion.span 
+      style={{ opacity, filter: `blur(${blur})`, y }} 
+      className="inline-block"
+    >
       {word}
     </motion.span>
   );

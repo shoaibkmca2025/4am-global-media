@@ -1,5 +1,7 @@
+
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle, Loader2 } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle, Loader2, Terminal, Zap } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Contact: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
@@ -14,138 +16,149 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-24 relative">
-       {/* Decorative gradient */}
+    <section id="contact" className="py-24 relative bg-white dark:bg-brand-obsidian transition-colors duration-500">
        <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-brand-primary/5 to-transparent pointer-events-none"></div>
 
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32">
           
-          {/* Info Side */}
-          <div className="space-y-8">
+          <div className="space-y-12">
             <div>
-              <h2 className="text-4xl md:text-6xl font-display font-bold mb-6 text-gray-900 dark:text-white">Let's build<br />something great.</h2>
-              <p className="text-gray-600 dark:text-gray-400 text-lg">
-                Ready to take your brand to the next level? Our team of experts is ready to craft your success story.
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-[1px] bg-brand-primary" />
+                <span className="text-brand-primary font-mono font-bold tracking-[0.5em] uppercase text-xs">05 // UPLINK_CENTER</span>
+              </div>
+              <h2 className="text-5xl md:text-7xl font-display font-bold mb-8 text-gray-900 dark:text-white tracking-tighter uppercase transition-colors">
+                Initialize <br /> Connection.
+              </h2>
+              <p className="text-gray-500 dark:text-gray-400 text-xl font-medium leading-relaxed max-w-lg italic">
+                Ready to engineer your growth? Transmit your data modules below and our core team will bridge the signal.
               </p>
             </div>
 
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center shrink-0">
-                  <Mail className="w-5 h-5 text-brand-primary" />
+            <div className="space-y-8">
+              {[
+                { label: 'Secure_Mail', value: 'contact@4amglobal.media', icon: Mail },
+                { label: 'Voice_Uplink', value: '+1 (555) 000-0000', icon: Phone },
+                { label: 'Base_Coordinates', value: 'Global Operations / Digital Space', icon: MapPin },
+              ].map((item) => (
+                <div key={item.label} className="group flex items-start gap-6">
+                  <div className="w-14 h-14 rounded-sm border border-gray-100 dark:border-white/10 flex items-center justify-center shrink-0 group-hover:bg-brand-primary group-hover:text-white transition-all duration-500 group-hover:border-brand-primary">
+                    <item.icon className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest mb-1">{item.label}</h4>
+                    <p className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-brand-primary transition-colors">{item.value}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-gray-900 dark:text-white font-medium">Email Us</h4>
-                  <a href="mailto:contact@4amglobal.media" className="text-gray-500 dark:text-gray-400 hover:text-brand-primary dark:hover:text-white transition-colors">contact@4amglobal.media</a>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center shrink-0">
-                  <Phone className="w-5 h-5 text-brand-primary" />
-                </div>
-                <div>
-                  <h4 className="text-gray-900 dark:text-white font-medium">Call Us</h4>
-                  <span className="text-gray-500 dark:text-gray-400">+1 (555) 000-0000</span>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center shrink-0">
-                  <MapPin className="w-5 h-5 text-brand-primary" />
-                </div>
-                <div>
-                  <h4 className="text-gray-900 dark:text-white font-medium">Headquarters</h4>
-                  <span className="text-gray-500 dark:text-gray-400">Global Operations<br/>Digital Space</span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
-          {/* Form Side */}
-          <div className="glass-panel p-8 md:p-10 rounded-3xl relative">
-            {status === 'success' ? (
-               <div className="absolute inset-0 flex flex-col items-center justify-center rounded-3xl bg-white/90 dark:bg-black/80 backdrop-blur-sm z-20">
-                 <CheckCircle className="w-16 h-16 text-green-500 mb-4" />
-                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Message Sent!</h3>
-                 <p className="text-gray-500 dark:text-gray-400 mt-2">We'll be in touch shortly.</p>
-                 <button 
-                  onClick={() => setStatus('idle')}
-                  className="mt-6 px-6 py-2 bg-gray-200 dark:bg-white/10 rounded-full hover:bg-gray-300 dark:hover:bg-white/20 transition-colors text-gray-900 dark:text-white"
+          <div className="relative">
+            <div className="absolute -inset-4 bg-brand-primary/5 blur-[80px] rounded-full pointer-events-none" />
+            
+            <div className="relative bg-white dark:bg-[#050505] border border-gray-100 dark:border-white/5 p-8 md:p-12 rounded-sm shadow-2xl transition-all">
+              {/* Form Status Bar */}
+              <div className="flex items-center justify-between mb-10 pb-6 border-b border-gray-100 dark:border-white/5">
+                 <div className="flex items-center gap-3">
+                   <Terminal className="w-4 h-4 text-brand-primary" />
+                   <span className="text-[10px] font-mono font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest">TRANSMISSION_STATUS: READY</span>
+                 </div>
+                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10B981]" />
+              </div>
+
+              {status === 'success' ? (
+                 <motion.div 
+                   initial={{ opacity: 0, scale: 0.9 }} 
+                   animate={{ opacity: 1, scale: 1 }}
+                   className="flex flex-col items-center justify-center py-16 text-center"
                  >
-                   Send another
-                 </button>
-               </div>
-            ) : null}
+                   <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mb-6 border border-emerald-500/20">
+                     <CheckCircle className="w-10 h-10 text-emerald-500" />
+                   </div>
+                   <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-2 uppercase tracking-tight">Signal Received.</h3>
+                   <p className="text-gray-500 dark:text-gray-400 mb-10">Data packets successfully merged with core servers.</p>
+                   <button 
+                    onClick={() => setStatus('idle')}
+                    className="px-10 py-4 bg-gray-900 dark:bg-white text-white dark:text-black text-xs font-bold uppercase tracking-widest hover:bg-brand-primary hover:text-white transition-all"
+                   >
+                     Send New Signal
+                   </button>
+                 </motion.div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-3">
+                      <label htmlFor="contact-name" className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest">Name_Metadata</label>
+                      <input 
+                        required 
+                        type="text" 
+                        id="contact-name"
+                        className="w-full bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/10 rounded-sm px-5 py-4 text-gray-900 dark:text-white focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/30 transition-all font-mono text-sm"
+                        placeholder="IDENTIFY YOURSELF"
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <label htmlFor="contact-email" className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest">Digital_Address</label>
+                      <input 
+                        required 
+                        type="email" 
+                        id="contact-email"
+                        className="w-full bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/10 rounded-sm px-5 py-4 text-gray-900 dark:text-white focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/30 transition-all font-mono text-sm"
+                        placeholder="UPLINK@MAIL.NODE"
+                      />
+                    </div>
+                  </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm font-medium text-gray-500 dark:text-gray-400">Name</label>
-                  <input 
-                    required 
-                    type="text" 
-                    id="name"
-                    className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-brand-primary transition-colors"
-                    placeholder="John Doe"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-medium text-gray-500 dark:text-gray-400">Email</label>
-                  <input 
-                    required 
-                    type="email" 
-                    id="email"
-                    className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-brand-primary transition-colors"
-                    placeholder="john@example.com"
-                  />
-                </div>
-              </div>
+                  <div className="space-y-3">
+                    <label htmlFor="service-select" className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest">Selected_Module</label>
+                    <select 
+                      id="service-select"
+                      className="w-full bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/10 rounded-sm px-5 py-4 text-gray-900 dark:text-white focus:outline-none focus:border-brand-primary transition-all font-mono text-sm [&>option]:text-black"
+                    >
+                      <option value="">SELECT PROTOCOL</option>
+                      <option value="dev">CUSTOM SOFTWARE ENG</option>
+                      <option value="ads">GROWTH & ADS MATRIX</option>
+                      <option value="seo">SEO & CONTENT SIGNAL</option>
+                      <option value="crypto">BLOCKCHAIN ADVISORY</option>
+                    </select>
+                  </div>
 
-              <div className="space-y-2">
-                <label htmlFor="service" className="text-sm font-medium text-gray-500 dark:text-gray-400">Service Interest</label>
-                <select 
-                  id="service"
-                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-brand-primary transition-colors [&>option]:text-black"
-                >
-                  <option value="">Select a service...</option>
-                  <option value="social">Social Media Growth</option>
-                  <option value="dev">Web/App Development</option>
-                  <option value="ads">SEO & Paid Ads</option>
-                  <option value="crypto">Crypto Advisory</option>
-                </select>
-              </div>
+                  <div className="space-y-3">
+                    <label htmlFor="contact-message" className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest">Request_Body</label>
+                    <textarea 
+                      required
+                      id="contact-message"
+                      rows={5}
+                      className="w-full bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/10 rounded-sm px-5 py-4 text-gray-900 dark:text-white focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/30 transition-all font-mono text-sm resize-none"
+                      placeholder="DESCRIBE YOUR OBJECTIVES..."
+                    ></textarea>
+                  </div>
 
-              <div className="space-y-2">
-                <label htmlFor="message" className="text-sm font-medium text-gray-500 dark:text-gray-400">Message</label>
-                <textarea 
-                  required
-                  id="message"
-                  rows={4}
-                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-brand-primary transition-colors"
-                  placeholder="Tell us about your project goals..."
-                ></textarea>
-              </div>
-
-              <button 
-                type="submit" 
-                disabled={status === 'submitting'}
-                className="w-full bg-brand-primary text-white font-bold py-4 rounded-lg hover:bg-brand-primary/90 transition-colors flex items-center justify-center gap-2"
-              >
-                {status === 'submitting' ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    Send Message
-                    <Send className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-            </form>
+                  <button 
+                    type="submit" 
+                    disabled={status === 'submitting'}
+                    className="group relative w-full bg-brand-primary text-white font-bold py-6 rounded-sm transition-all overflow-hidden shadow-xl hover:shadow-brand-primary/40 active:scale-[0.98]"
+                  >
+                    <div className="absolute inset-0 bg-gray-900 dark:bg-white -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-[0.19,1,0.22,1]" />
+                    <span className="relative z-10 flex items-center justify-center gap-4 uppercase tracking-[0.4em] text-sm group-hover:text-white dark:group-hover:text-black transition-colors">
+                      {status === 'submitting' ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          TRANSMITTING...
+                        </>
+                      ) : (
+                        <>
+                          Initiate Uplink
+                          <Zap className="w-4 h-4 fill-current" />
+                        </>
+                      )}
+                    </span>
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
 
         </div>
