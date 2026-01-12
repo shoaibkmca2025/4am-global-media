@@ -17,6 +17,7 @@ export interface Client {
 export interface NavItem {
   label: string;
   href: string;
+  icon?: string;
 }
 
 export interface Article {
@@ -69,15 +70,7 @@ export interface Opportunity {
   requirements: string[];
 }
 
-// Satisfy TypeScript for process.env.API_KEY in browser environment
-// Using NodeJS namespace augmentation to avoid "Cannot redeclare" conflicts with existing global process definitions.
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      API_KEY: string;
-      [key: string]: string | undefined;
-    }
-  }
-}
+// Global process definition removed as it is already declared in the environment types.
+// This prevents "Cannot redeclare block-scoped variable 'process'" errors.
 
 export const types = true;
