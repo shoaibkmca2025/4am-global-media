@@ -69,4 +69,15 @@ export interface Opportunity {
   requirements: string[];
 }
 
+// Satisfy TypeScript for process.env.API_KEY in browser environment
+// Using NodeJS namespace augmentation to avoid "Cannot redeclare" conflicts with existing global process definitions.
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      API_KEY: string;
+      [key: string]: string | undefined;
+    }
+  }
+}
+
 export const types = true;
