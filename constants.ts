@@ -1,12 +1,13 @@
+
 import { Service, Client, NavItem, Article, Project } from './types';
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: 'Home', href: '#hero' },
-  { label: 'Services', href: '#services' },
-  { label: 'Case Studies', href: '#projects' },
-  { label: 'Insights', href: '#insights' },
-  { label: 'Network', href: '#clients' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Home', href: '/' },
+  { label: 'Services', href: '/services' },
+  { label: 'Case Studies', href: '/#projects' },
+  { label: 'Insights', href: '/#insights' },
+  { label: 'Network', href: '/#clients' },
+  { label: 'Contact', href: '/#contact' },
 ];
 
 export const PROJECTS: Project[] = [
@@ -62,6 +63,16 @@ export const INITIAL_ARTICLES: Article[] = [
     date: 'Feb 02, 2024',
     category: 'Technology',
     readTime: '10 min read',
+  },
+  {
+    id: '3',
+    title: 'Immersion: The Future of Interaction',
+    excerpt: 'Why AR and VR motion graphics are becoming the standard for enterprise storytelling.',
+    content: 'AR and VR motion graphics integrate animation into immersive environments, enhancing user interaction and realism. By combining motion with augmented or virtual spaces, designers can guide attention, tell stories, and create experiences that feel dynamic...',
+    author: 'Leo Sterling',
+    date: 'March 10, 2024',
+    category: 'Immersive',
+    readTime: '8 min read',
   }
 ];
 
@@ -73,6 +84,14 @@ export const SERVICES: Service[] = [
     icon: 'code',
     longDescription: 'We build the backbone of your business. From complex CRM systems to consumer-facing mobile apps, our engineering team uses cutting-edge technologies like React, Node, and Rust to deliver robust products.',
     features: ['SaaS Architecture', 'Cross-Platform Mobile Apps', 'API Integration & Design', 'Cloud Infrastructure', 'Legacy System Modernization']
+  },
+  {
+    id: 'immersive',
+    title: 'AR & VR Motion Systems',
+    description: 'Integrating high-fidelity animation into immersive spatial environments for unprecedented realism.',
+    icon: 'layers',
+    longDescription: 'AR and VR motion graphics integrate animation into immersive environments, enhancing user interaction and realism. By combining motion with augmented or virtual spaces, designers can guide attention, tell stories, and create experiences that feel dynamic.',
+    features: ['Spatial UI Design', 'Interactive 3D Assets', 'Immersive Storytelling', 'VR Environment Animation', 'Augmented Reality Filters']
   },
   {
     id: 'marketing',

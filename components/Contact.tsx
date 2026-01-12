@@ -1,13 +1,19 @@
 
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle, Loader2, Terminal, Zap } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle, Loader2, Terminal, Zap, Lock, UserPlus } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAuth } from './AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Contact: React.FC = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) return;
+    
     setStatus('submitting');
     // Simulate API call
     setTimeout(() => {
@@ -32,7 +38,7 @@ const Contact: React.FC = () => {
                 Initialize <br /> Connection.
               </h2>
               <p className="text-gray-500 dark:text-gray-400 text-xl font-medium leading-relaxed max-w-lg italic">
-                Ready to engineer your growth? Transmit your data modules below and our core team will bridge the signal.
+                Ready to engineer your growth? Transmit your data modules and our core team will bridge the signal.
               </p>
             </div>
 
@@ -58,66 +64,113 @@ const Contact: React.FC = () => {
           <div className="relative">
             <div className="absolute -inset-4 bg-brand-primary/5 blur-[80px] rounded-full pointer-events-none" />
             
-            <div className="relative bg-white dark:bg-[#050505] border border-gray-100 dark:border-white/5 p-8 md:p-12 rounded-sm shadow-2xl transition-all">
+            <div className="relative bg-white dark:bg-[#050505] border border-gray-100 dark:border-white/5 p-8 md:p-12 rounded-sm shadow-2xl transition-all h-full min-h-[500px] flex flex-col">
               {/* Form Status Bar */}
               <div className="flex items-center justify-between mb-10 pb-6 border-b border-gray-100 dark:border-white/5">
                  <div className="flex items-center gap-3">
                    <Terminal className="w-4 h-4 text-brand-primary" />
-                   <span className="text-[10px] font-mono font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest">TRANSMISSION_STATUS: READY</span>
+                   <span className="text-[10px] font-mono font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest">
+                     {user ? 'TRANSMISSION_STATUS: AUTHORIZED' : 'TRANSMISSION_STATUS: RESTRICTED'}
+                   </span>
                  </div>
-                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10B981]" />
+                 <div className={`w-2 h-2 rounded-full ${user ? 'bg-emerald-500 shadow-[0_0_8px_#10B981]' : 'bg-amber-500 shadow-[0_0_8px_#F59E0B]'} animate-pulse`} />
               </div>
 
-              {status === 'success' ? (
+              {!user ? (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex-1 flex flex-col items-center justify-center text-center space-y-10 py-10"
+                >
+                  <div className="w-24 h-24 bg-brand-primary/10 rounded-full flex items-center justify-center text-brand-primary relative">
+                    <div className="absolute inset-0 border-2 border-brand-primary/20 rounded-full animate-ping" />
+                    <Lock className="w-10 h-10" />
+                  </div>
+                  
+                  <div className="space-y-4 max-w-sm">
+                    <h3 className="text-3xl font-display font-bold uppercase tracking-tight">Secure Uplink Required</h3>
+                    <p className="text-slate-500 text-sm leading-relaxed">
+                      To ensure end-to-end encryption and private communication logs, please authorize your identity before sending a signal.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-4 w-full">
+                    <button 
+                      onClick={() => navigate('/login')}
+                      className="flex-1 px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-sm font-bold text-xs uppercase tracking-widest hover:shadow-xl transition-all flex items-center justify-center gap-3"
+                    >
+                      <Zap className="w-4 h-4" />
+                      Login Node
+                    </button>
+                    <button 
+                      onClick={() => navigate('/register')}
+                      className="flex-1 px-8 py-4 bg-brand-primary text-white rounded-sm font-bold text-xs uppercase tracking-widest hover:shadow-xl transition-all flex items-center justify-center gap-3"
+                    >
+                      <UserPlus className="w-4 h-4" />
+                      Register Identity
+                    </button>
+                  </div>
+                </motion.div>
+              ) : status === 'success' ? (
                  <motion.div 
                    initial={{ opacity: 0, scale: 0.9 }} 
                    animate={{ opacity: 1, scale: 1 }}
-                   className="flex flex-col items-center justify-center py-16 text-center"
+                   className="flex-1 flex flex-col items-center justify-center py-16 text-center"
                  >
                    <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mb-6 border border-emerald-500/20">
                      <CheckCircle className="w-10 h-10 text-emerald-500" />
                    </div>
                    <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-2 uppercase tracking-tight">Signal Received.</h3>
-                   <p className="text-gray-500 dark:text-gray-400 mb-10">Data packets successfully merged with core servers.</p>
-                   <button 
-                    onClick={() => setStatus('idle')}
-                    className="px-10 py-4 bg-gray-900 dark:bg-white text-white dark:text-black text-xs font-bold uppercase tracking-widest hover:bg-brand-primary hover:text-white transition-all"
-                   >
-                     Send New Signal
-                   </button>
+                   <p className="text-gray-500 dark:text-gray-400 mb-10">Data packets successfully merged with core servers. Track the response in your dashboard.</p>
+                   <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
+                    <button 
+                      onClick={() => navigate('/dashboard/support')}
+                      className="px-10 py-4 bg-brand-primary text-white text-xs font-bold uppercase tracking-widest hover:shadow-xl transition-all"
+                    >
+                      Go to Dashboard
+                    </button>
+                    <button 
+                      onClick={() => setStatus('idle')}
+                      className="px-10 py-4 bg-gray-100 dark:bg-white/5 text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-widest hover:bg-gray-200 transition-all"
+                    >
+                      Send New Signal
+                    </button>
+                   </div>
                  </motion.div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-8">
+                <form onSubmit={handleSubmit} className="space-y-8 flex-1">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-3">
-                      <label htmlFor="contact-name" className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest">Name_Metadata</label>
+                      <label htmlFor="contact-name" className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest">Operator_Handle</label>
                       <input 
                         required 
                         type="text" 
                         id="contact-name"
-                        className="w-full bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/10 rounded-sm px-5 py-4 text-gray-900 dark:text-white focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/30 transition-all font-mono text-sm"
-                        placeholder="IDENTIFY YOURSELF"
+                        defaultValue={user.name}
+                        readOnly
+                        className="w-full bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/10 rounded-sm px-5 py-4 text-gray-500 dark:text-gray-400 font-mono text-sm cursor-not-allowed"
                       />
                     </div>
                     <div className="space-y-3">
-                      <label htmlFor="contact-email" className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest">Digital_Address</label>
+                      <label htmlFor="contact-email" className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest">Authorized_Endpoint</label>
                       <input 
                         required 
                         type="email" 
                         id="contact-email"
-                        className="w-full bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/10 rounded-sm px-5 py-4 text-gray-900 dark:text-white focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/30 transition-all font-mono text-sm"
-                        placeholder="UPLINK@MAIL.NODE"
+                        defaultValue={user.email}
+                        readOnly
+                        className="w-full bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/10 rounded-sm px-5 py-4 text-gray-500 dark:text-gray-400 font-mono text-sm cursor-not-allowed"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-3">
-                    <label htmlFor="service-select" className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest">Selected_Module</label>
+                    <label htmlFor="service-select" className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest">Protocol_Target</label>
                     <select 
                       id="service-select"
                       className="w-full bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/10 rounded-sm px-5 py-4 text-gray-900 dark:text-white focus:outline-none focus:border-brand-primary transition-all font-mono text-sm [&>option]:text-black"
                     >
-                      <option value="">SELECT PROTOCOL</option>
+                      <option value="">SELECT CAPABILITY</option>
                       <option value="dev">CUSTOM SOFTWARE ENG</option>
                       <option value="ads">GROWTH & ADS MATRIX</option>
                       <option value="seo">SEO & CONTENT SIGNAL</option>
@@ -126,7 +179,7 @@ const Contact: React.FC = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <label htmlFor="contact-message" className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest">Request_Body</label>
+                    <label htmlFor="contact-message" className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest">Encrypted_Payload</label>
                     <textarea 
                       required
                       id="contact-message"

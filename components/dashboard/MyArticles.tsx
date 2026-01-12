@@ -1,12 +1,15 @@
+
 import React, { useState } from 'react';
 import { useArticles } from '../ArticleContext';
 import { useAuth } from '../AuthContext';
-import { Plus, Trash2, Edit2, Loader2, X, FileText, Calendar, Tag } from 'lucide-react';
+import { Plus, Trash2, Edit2, Loader2, X, FileText, Calendar, Tag, ArrowLeft } from 'lucide-react';
 import { Article } from '../../types';
+import { useNavigate } from 'react-router-dom';
 
 const MyArticles: React.FC = () => {
   const { articles = [], addArticle, deleteArticle } = useArticles();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [isCreating, setIsCreating] = useState(false);
   const [loading, setLoading] = useState(false);
   
@@ -116,6 +119,16 @@ const MyArticles: React.FC = () => {
 
   return (
     <div>
+      <div className="mb-8">
+        <button 
+          onClick={() => navigate('/dashboard')}
+          className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-brand-primary transition-colors mb-4"
+        >
+          <ArrowLeft className="w-3 h-3" />
+          Back to Overview
+        </button>
+      </div>
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
         <div>
           <h2 className="text-3xl font-bold font-display text-gray-900 dark:text-white">Internal Insights</h2>

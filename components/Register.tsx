@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { Rocket, Loader2, Lock, Mail, User } from 'lucide-react';
+import { Rocket, Loader2, Lock, Mail, User, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Register: React.FC = () => {
@@ -19,7 +20,8 @@ const Register: React.FC = () => {
     setError('');
     try {
       await register(name, email, password);
-      navigate('/dashboard');
+      // Redirecting to home page instead of dashboard per user request
+      navigate('/');
     } catch (err) {
       setError('Registration failed. Please try again.');
     } finally {
@@ -31,6 +33,17 @@ const Register: React.FC = () => {
     <div className="min-h-screen pt-20 flex items-center justify-center px-4 relative overflow-hidden bg-gray-50 dark:bg-brand-dark transition-colors">
        <div className="absolute inset-0 bg-radial-gradient from-brand-primary/5 via-transparent to-transparent pointer-events-none" />
        
+       {/* Floating Back Button */}
+       <div className="absolute top-8 left-8 z-20">
+         <Link 
+           to="/"
+           className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-brand-primary transition-all group px-4 py-2 glass rounded-full"
+         >
+           <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+           Back to Home
+         </Link>
+       </div>
+
        <motion.div 
          initial={{ opacity: 0, y: 20 }}
          animate={{ opacity: 1, y: 0 }}

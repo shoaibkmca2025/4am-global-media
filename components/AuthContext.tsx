@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '../types';
 
@@ -5,6 +6,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  loginWithSocial: (provider: 'google' | 'github' | 'microsoft') => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   updateProfile: (updates: Partial<User>) => Promise<void>;
@@ -63,6 +65,29 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
   };
 
+  const loginWithSocial = async (provider: 'google' | 'github' | 'microsoft') => {
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        const demoUser: User = {
+          id: `social-${Date.now()}`,
+          name: `${provider.charAt(0).toUpperCase() + provider.slice(1)} Operator`,
+          email: `${provider}@4am-network.id`,
+          role: 'user',
+          bio: `Authenticated via ${provider} secure uplink.`,
+          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${provider}`,
+          jobTitle: 'Network Member',
+          location: 'Global Edge Node',
+          phone: '',
+          website: '',
+          skills: []
+        };
+        setUser(demoUser);
+        localStorage.setItem('auth_user', JSON.stringify(demoUser));
+        resolve();
+      }, 800);
+    });
+  };
+
   const register = async (name: string, email: string, password: string) => {
     return new Promise<void>((resolve) => {
       setTimeout(() => {
@@ -103,7 +128,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout, updateProfile }}>
+    <AuthContext.Provider value={{ user, isLoading, login, loginWithSocial, register, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );

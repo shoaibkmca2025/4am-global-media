@@ -1,3 +1,4 @@
+
 export interface Service {
   id: string;
   title: string;
@@ -53,6 +54,19 @@ export interface Project {
   challenge: string;
   solution: string;
   technologies: string[];
+}
+
+export interface Opportunity {
+  id: string;
+  title: string;
+  department: string;
+  location: string;
+  type: 'Full-time' | 'Part-time' | 'Internship' | 'Contract';
+  salary?: string;
+  postedDate: string;
+  status: 'Open' | 'Closed' | 'Interviewing';
+  description: string;
+  requirements: string[];
 }
 
 export const types = true;

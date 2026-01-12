@@ -6,205 +6,183 @@ const CustomCursor: React.FC = () => {
   const [cursorState, setCursorState] = useState<'default' | 'pointer' | 'text'>('default');
   const [isVisible, setIsVisible] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
-  const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
-
-  // Core movement values
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  // High-performance spring configurations
-  const coreSpring = { stiffness: 1000, damping: 50, mass: 0.1 };
-  const ringSpring = { stiffness: 350, damping: 25, mass: 0.5 };
-  const ghostSpring = { stiffness: 150, damping: 20, mass: 0.8 };
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  
+  const mouseX = useMotionValue(-100);
+  const mouseY = useMotionValue(-100);
+  
+  const ringSpring = { stiffness: 250, damping: 30, mass: 0.5 };
+  const coreSpring = { stiffness: 800, damping: 50, mass: 0.1 };
   
   const smoothX = useSpring(mouseX, ringSpring);
   const smoothY = useSpring(mouseY, ringSpring);
-  
   const coreX = useSpring(mouseX, coreSpring);
   const coreY = useSpring(mouseY, coreSpring);
 
-  const ghostX = useSpring(mouseX, ghostSpring);
-  const ghostY = useSpring(mouseY, ghostSpring);
-
-  // Velocity tracking for prismatic shift
-  const [velocity, setVelocity] = useState(0);
+  const velocity = useRef(0);
   const lastPos = useRef({ x: 0, y: 0, time: Date.now() });
+  const particles = useRef<Array<{
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    life: number;
+    color: string;
+    size: number;
+  }>>([]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isVisible) setIsVisible(true);
-      
       const { clientX, clientY } = e;
       mouseX.set(clientX);
       mouseY.set(clientY);
 
-      // Velocity calculation for "Spectral Stretching"
       const now = Date.now();
       const dt = now - lastPos.current.time;
       if (dt > 0) {
         const dx = clientX - lastPos.current.x;
         const dy = clientY - lastPos.current.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        setVelocity(dist / dt);
+        velocity.current = Math.sqrt(dx * dx + dy * dy) / dt;
+        
+        // Emit particles on move
+        if (velocity.current > 0.5 && particles.current.length < 50) {
+          particles.current.push({
+            x: clientX,
+            y: clientY,
+            vx: (Math.random() - 0.5) * 2,
+            vy: (Math.random() - 0.5) * 2,
+            life: 1.0,
+            color: Math.random() > 0.5 ? '#3B82F6' : '#8B5CF6',
+            size: Math.random() * 2 + 1
+          });
+        }
       }
       lastPos.current = { x: clientX, y: clientY, time: now };
 
-      // Element detection
+      // Element detection for states
       const target = e.target as HTMLElement;
-      const clickable = target.closest('a, button, [role="button"], .cursor-pointer');
-      const textable = target.closest('p, h1, h2, h3, h4, span, input, textarea');
-
-      if (clickable) {
-        setCursorState('pointer');
-        setTargetRect(clickable.getBoundingClientRect());
-      } else if (textable) {
-        setCursorState('text');
-        setTargetRect(null);
-      } else {
-        setCursorState('default');
-        setTargetRect(null);
-      }
+      const isPointer = window.getComputedStyle(target).cursor === 'pointer' || 
+                        target.tagName === 'A' || 
+                        target.tagName === 'BUTTON' ||
+                        target.closest('button') ||
+                        target.closest('a');
+      
+      setCursorState(isPointer ? 'pointer' : 'default');
     };
 
     const handleMouseDown = () => setIsMouseDown(true);
     const handleMouseUp = () => setIsMouseDown(false);
+    const handleMouseLeave = () => setIsVisible(false);
+    const handleMouseEnter = () => setIsVisible(true);
 
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
+    document.body.addEventListener('mouseleave', handleMouseLeave);
+    document.body.addEventListener('mouseenter', handleMouseEnter);
+
+    // Canvas Animation Loop
+    let animationFrame: number;
+    const ctx = canvasRef.current?.getContext('2d');
     
-    document.documentElement.classList.add('has-custom-cursor');
+    const animate = () => {
+      if (ctx && canvasRef.current) {
+        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+        particles.current.forEach((p, i) => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.life -= 0.02;
+          
+          ctx.globalAlpha = p.life;
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (p.life <= 0) particles.current.splice(i, 1);
+        });
+      }
+      animationFrame = requestAnimationFrame(animate);
+    };
+    
+    animate();
+
+    const resizeCanvas = () => {
+      if (canvasRef.current) {
+        canvasRef.current.width = window.innerWidth;
+        canvasRef.current.height = window.innerHeight;
+      }
+    };
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
-      document.documentElement.classList.remove('has-custom-cursor');
+      document.body.removeEventListener('mouseleave', handleMouseLeave);
+      document.body.removeEventListener('mouseenter', handleMouseEnter);
+      window.removeEventListener('resize', resizeCanvas);
+      cancelAnimationFrame(animationFrame);
     };
   }, [isVisible]);
 
-  // Derived visuals
-  const spectralBlur = useTransform(smoothX, () => Math.min(velocity * 2, 8));
-  const spectralScale = useTransform(smoothX, () => 1 + Math.min(velocity * 0.05, 0.4));
-
-  if (typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)) return null;
-
   return (
-    <div className="fixed inset-0 z-[9999] pointer-events-none">
-      {/* 1. The Ghost Aura (Bokeh Trail) */}
-      <motion.div
-        className="fixed top-0 left-0 rounded-full bg-brand-primary/10 blur-[20px]"
-        style={{
-          x: ghostX,
-          y: ghostY,
-          translateX: '-50%',
-          translateY: '-50%',
-          width: 80,
-          height: 80,
-        }}
-        animate={{
-          opacity: velocity > 1 ? 0.3 : 0,
-          scale: 0.5 + velocity * 0.2
-        }}
+    <div className="fixed inset-0 z-[999] pointer-events-none overflow-hidden">
+      <canvas 
+        ref={canvasRef} 
+        className="absolute inset-0 w-full h-full"
       />
+      
+      <AnimatePresence>
+        {isVisible && (
+          <>
+            {/* Core Node */}
+            <motion.div
+              // FIX: Removed duplicate x and y properties. Using left/top with translateX/translateY for centering.
+              style={{ left: coreX, top: coreY, translateX: '-50%', translateY: '-50%' }}
+              className="absolute w-1.5 h-1.5 bg-brand-primary rounded-full z-10 shadow-[0_0_10px_#3B82F6]"
+              animate={{ 
+                scale: isMouseDown ? 0.5 : cursorState === 'pointer' ? 1.5 : 1,
+                backgroundColor: cursorState === 'pointer' ? '#8B5CF6' : '#3B82F6'
+              }}
+            />
 
-      {/* 2. The Spectral Prism Ring */}
-      <motion.div
-        className="fixed top-0 left-0 border border-white/40 mix-blend-difference backdrop-blur-[1px]"
-        style={{
-          x: smoothX,
-          y: smoothY,
-          translateX: '-50%',
-          translateY: '-50%',
-          scale: spectralScale,
-        }}
-        animate={{
-          width: cursorState === 'pointer' ? 60 : cursorState === 'text' ? 4 : 32,
-          height: cursorState === 'pointer' ? 60 : cursorState === 'text' ? 40 : 32,
-          borderRadius: cursorState === 'pointer' ? '12px' : cursorState === 'text' ? '2px' : '50%',
-          rotate: cursorState === 'pointer' ? 45 : 0,
-          borderColor: cursorState === 'pointer' ? '#00F0FF' : 'rgba(255,255,255,0.4)',
-          backgroundColor: isMouseDown ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0)',
-        }}
-        transition={{ type: "spring", stiffness: 400, damping: 28 }}
-      >
-        {/* Prism Corner Detail */}
-        <AnimatePresence>
-          {cursorState === 'pointer' && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 flex items-center justify-center"
+            {/* Diagnostic Ring */}
+            <motion.div
+              // FIX: Removed duplicate x and y properties. Using left/top with translateX/translateY for centering.
+              style={{ left: smoothX, top: smoothY, translateX: '-50%', translateY: '-50%' }}
+              className="absolute rounded-full border border-brand-primary/30 z-0"
+              animate={{ 
+                width: cursorState === 'pointer' ? 60 : 32,
+                height: cursorState === 'pointer' ? 60 : 32,
+                rotate: velocity.current * 10,
+                borderColor: cursorState === 'pointer' ? 'rgba(139, 92, 246, 0.5)' : 'rgba(59, 130, 246, 0.3)',
+                borderWidth: isMouseDown ? 4 : 1,
+              }}
             >
-              <div className="w-[150%] h-[1px] bg-brand-signal/20 rotate-45" />
-              <div className="w-[150%] h-[1px] bg-brand-signal/20 -rotate-45" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
-      {/* 3. Precision Core Point */}
-      <motion.div
-        className="fixed top-0 left-0 bg-white z-20"
-        style={{
-          x: coreX,
-          y: coreY,
-          translateX: '-50%',
-          translateY: '-50%',
-          width: 4,
-          height: 4,
-          borderRadius: '50%',
-          boxShadow: '0 0 10px rgba(255,255,255,0.8)'
-        }}
-        animate={{
-          scale: isMouseDown ? 0.6 : cursorState === 'pointer' ? 1.5 : 1,
-          opacity: cursorState === 'text' ? 0 : 1,
-          backgroundColor: cursorState === 'pointer' ? '#00F0FF' : '#FFFFFF'
-        }}
-      />
-
-      {/* 4. Floating Node Status Ticker */}
-      <AnimatePresence>
-        {cursorState === 'pointer' && (
-          <motion.div
-            initial={{ opacity: 0, x: 20, y: 10 }}
-            animate={{ opacity: 1, x: 40, y: 0 }}
-            exit={{ opacity: 0, x: 20, y: 10 }}
-            className="fixed top-0 left-0 flex items-start gap-2"
-            style={{ x: coreX, y: coreY }}
-          >
-            <div className="flex flex-col">
-              <span className="text-[7px] font-mono text-brand-signal font-bold tracking-[0.4em] uppercase">
-                TARGET_LOCK
-              </span>
-              <div className="h-[1px] w-6 bg-brand-signal/50 mt-1" />
-              <div className="flex gap-1 mt-1">
-                {[1, 2, 3].map(i => (
-                  <motion.div 
-                    key={i}
-                    animate={{ opacity: [0.2, 1, 0.2] }}
-                    transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.1 }}
-                    className="w-1 h-1 bg-brand-signal" 
-                  />
-                ))}
+              {/* Spinning Crosshair Segments */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-40">
+                <div className="w-[110%] h-[1px] bg-gradient-to-r from-transparent via-brand-primary to-transparent" />
+                <div className="h-[110%] w-[1px] bg-gradient-to-b from-transparent via-brand-primary to-transparent" />
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </motion.div>
 
-      {/* 5. Impulse Ripple (On Click) */}
-      <AnimatePresence>
-        {isMouseDown && (
-          <motion.div
-            initial={{ scale: 0.2, opacity: 0.8 }}
-            animate={{ scale: 3, opacity: 0 }}
-            exit={{ opacity: 0 }}
-            className="fixed top-0 left-0 w-20 h-20 border-2 border-white rounded-full mix-blend-difference"
-            style={{ x: coreX, y: coreY, translateX: '-50%', translateY: '-50%' }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-          />
+            {/* Telemetry Label */}
+            <motion.div
+              style={{ left: smoothX, top: smoothY }}
+              initial={{ opacity: 0 }}
+              animate={{ 
+                opacity: cursorState === 'pointer' ? 1 : 0,
+                x: 40,
+                y: -10
+              }}
+              className="absolute text-[8px] font-mono font-bold text-brand-primary uppercase tracking-[0.2em] pointer-events-none whitespace-nowrap bg-white/10 backdrop-blur-md px-2 py-1 rounded-md border border-brand-primary/20"
+            >
+              SYNC_NODE_ACTIVE
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </div>

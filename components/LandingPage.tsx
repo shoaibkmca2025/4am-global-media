@@ -1,8 +1,9 @@
+
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Hero from './Hero';
 import Philosophy from './Philosophy';
-import Services from './Services';
+import Process from './Process';
 import Projects from './Projects';
 import Articles from './Articles';
 import NetworkMarquee from './NetworkMarquee';
@@ -40,7 +41,7 @@ const LandingPage: React.FC = () => {
     <main>
       <Hero />
       <Philosophy />
-      <Services />
+      <Process />
       <Projects />
       <Articles />
       <NetworkMarquee />

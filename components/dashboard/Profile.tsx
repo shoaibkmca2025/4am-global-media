@@ -1,11 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
-import { Save, Loader2, User, Mail, Camera, MapPin, Globe, Sparkles, Shield } from 'lucide-react';
+import { Save, Loader2, User, Mail, Camera, MapPin, Globe, Sparkles, Shield, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const Profile: React.FC = () => {
   const { user, updateProfile } = useAuth();
+  const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
     name: '',
@@ -50,6 +52,13 @@ const Profile: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto pb-20">
       <div className="mb-16">
+        <button 
+          onClick={() => navigate('/dashboard')}
+          className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-brand-primary transition-colors mb-4"
+        >
+          <ArrowLeft className="w-3 h-3" />
+          Back to Overview
+        </button>
         <div className="flex items-center gap-4 mb-4">
            <div className="w-10 h-[1px] bg-brand-primary" />
            <span className="text-brand-primary font-mono font-bold tracking-[0.5em] uppercase text-xs">Uplink Config</span>
