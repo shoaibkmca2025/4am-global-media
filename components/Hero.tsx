@@ -8,7 +8,7 @@ import Magnetic from './Magnetic';
 const DataStream: React.FC = () => {
   const characters = "01$#!&<>[]{}ABCDEF";
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.03] dark:opacity-10">
       {[...Array(10)].map((_, i) => (
         <motion.div
           key={i}
@@ -165,7 +165,7 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section id="hero" className="relative min-h-[100vh] flex items-center pt-20 pb-40 overflow-hidden bg-brand-dark">
+    <section id="hero" className="relative min-h-[100vh] flex items-center pt-20 pb-40 overflow-hidden bg-white dark:bg-brand-dark transition-colors duration-500">
       <DataStream />
       
       {/* Dynamic Background Spotlights */}
@@ -175,7 +175,7 @@ const Hero: React.FC = () => {
             x: useTransform(smoothMouseX, (v) => v * 0.5),
             y: useTransform(smoothMouseY, (v) => v * 0.5),
           }}
-          className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-brand-primary/10 blur-[140px] rounded-full pointer-events-none" 
+          className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-brand-primary/5 dark:bg-brand-primary/10 blur-[140px] rounded-full pointer-events-none" 
         />
         <motion.div 
           style={{ 
@@ -197,20 +197,20 @@ const Hero: React.FC = () => {
           <div className="lg:col-span-9 space-y-12">
             <motion.div 
               variants={itemVariants}
-              className="inline-flex items-center gap-3 px-5 py-2 rounded-full glass border border-white/10 shadow-2xl"
+              className="inline-flex items-center gap-3 px-5 py-2 rounded-full glass border border-slate-200 dark:border-white/10 shadow-2xl"
             >
               <div className="flex items-center gap-1.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse shadow-[0_0_10px_#2563EB]" />
                 <span className="text-[10px] font-mono font-bold uppercase tracking-[0.5em] text-brand-primary">SYSTEM_OPERATIONAL</span>
               </div>
-              <div className="w-[1px] h-3 bg-white/10" />
+              <div className="w-[1px] h-3 bg-slate-200 dark:bg-white/10" />
               <span className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-slate-400">NODE_04 // GLOBAL</span>
             </motion.div>
 
             <div className="relative">
               <motion.h1 
                 variants={itemVariants}
-                className="text-7xl md:text-[10rem] 2xl:text-[13rem] font-display font-bold leading-[0.75] tracking-tighter text-white"
+                className="text-7xl md:text-[10rem] 2xl:text-[13rem] font-display font-bold leading-[0.75] tracking-tighter text-slate-900 dark:text-white"
               >
                 CRAFTING <br/>
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary via-brand-signal to-brand-accent italic glow-text">
@@ -223,8 +223,8 @@ const Hero: React.FC = () => {
               variants={itemVariants}
               className="max-w-2xl"
             >
-              <p className="text-xl md:text-3xl text-slate-400 leading-tight font-light tracking-tight italic">
-                Engineering <span className="text-white font-medium border-b border-brand-primary/50">high-velocity ecosystems</span> where complex code bridges the gap to explosive market ROI.
+              <p className="text-xl md:text-3xl text-slate-500 dark:text-slate-400 leading-tight font-light tracking-tight italic">
+                Engineering <span className="text-slate-900 dark:text-white font-medium border-b border-brand-primary/50">high-velocity ecosystems</span> where complex code bridges the gap to explosive market ROI.
               </p>
             </motion.div>
           </div>
@@ -245,14 +245,14 @@ const Hero: React.FC = () => {
                 <motion.div
                   key={i}
                   variants={itemVariants}
-                  className="glass p-6 rounded-3xl border border-white/5 flex items-center gap-6 group hover:border-brand-primary/40 hover:bg-brand-primary/5 transition-all"
+                  className="glass p-6 rounded-3xl border border-slate-200 dark:border-white/5 flex items-center gap-6 group hover:border-brand-primary/40 hover:bg-brand-primary/5 transition-all"
                 >
-                  <div className={`w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center ${item.color} shadow-inner group-hover:scale-110 transition-transform`}>
+                  <div className={`w-14 h-14 rounded-2xl bg-slate-50 dark:bg-white/5 flex items-center justify-center ${item.color} shadow-inner group-hover:scale-110 transition-transform`}>
                     <item.icon className="w-7 h-7" />
                   </div>
                   <div>
                     <p className="text-[8px] font-mono text-slate-500 uppercase tracking-widest mb-1">{item.label}</p>
-                    <p className="text-xs font-bold font-mono tracking-tight text-white">{item.value}</p>
+                    <p className="text-xs font-bold font-mono tracking-tight text-slate-900 dark:text-white">{item.value}</p>
                   </div>
                 </motion.div>
               ))}
@@ -271,19 +271,19 @@ const Hero: React.FC = () => {
           
           <button 
             onClick={() => navigate('/services')}
-            className="flex items-center gap-5 px-10 py-6 glass rounded-[2rem] hover:bg-white/10 transition-all group"
+            className="flex items-center gap-5 px-10 py-6 glass rounded-[2rem] hover:bg-slate-100 dark:hover:bg-white/10 transition-all group border border-slate-200 dark:border-white/5"
           >
-             <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-brand-signal">
+             <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-white/10 flex items-center justify-center text-brand-signal">
                <Binary className="w-6 h-6" />
              </div>
              <div className="text-left">
                <p className="text-[8px] font-mono text-slate-500 uppercase tracking-widest">Protocol_List</p>
-               <p className="text-xs font-bold uppercase tracking-tight text-white">Core Modules</p>
+               <p className="text-xs font-bold uppercase tracking-tight text-slate-900 dark:text-white">Core Modules</p>
              </div>
           </button>
         </div>
 
-        <div className="glass rounded-[3.5rem] p-10 flex flex-col md:flex-row items-center justify-between shadow-3xl border border-white/5">
+        <div className="glass rounded-[3.5rem] p-10 flex flex-col md:flex-row items-center justify-between shadow-3xl border border-slate-200 dark:border-white/5">
           <div className="flex items-center gap-16">
             <div className="flex items-center gap-5">
               <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary border border-brand-primary/20">
@@ -291,7 +291,7 @@ const Hero: React.FC = () => {
               </div>
               <div>
                 <span className="text-[8px] font-mono text-slate-500 uppercase tracking-widest block mb-0.5">Core_Architecture</span>
-                <span className="text-xs font-display font-bold uppercase tracking-tighter text-white">4AM_NEXUS_v4</span>
+                <span className="text-xs font-display font-bold uppercase tracking-tighter text-slate-900 dark:text-white">4AM_NEXUS_v4</span>
               </div>
             </div>
             
@@ -308,7 +308,7 @@ const Hero: React.FC = () => {
                       repeat: Infinity, 
                       delay: i * 0.05 
                     }} 
-                    className={`w-1 rounded-full ${i % 3 === 0 ? 'bg-brand-primary' : 'bg-white/10'}`} 
+                    className={`w-1 rounded-full ${i % 3 === 0 ? 'bg-brand-primary' : 'bg-slate-200 dark:bg-white/10'}`} 
                   />
                 ))}
               </div>
@@ -324,12 +324,12 @@ const Hero: React.FC = () => {
                 <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">128_NODES_SECURE</p>
               </div>
             </div>
-            <div className="h-10 w-[1px] bg-white/10 hidden sm:block" />
+            <div className="h-10 w-[1px] bg-slate-200 dark:bg-white/10 hidden sm:block" />
             <div className="flex items-center gap-4">
               <Globe className="w-5 h-5 text-brand-signal animate-spin-slow" />
               <div className="text-left">
                 <p className="text-[8px] font-mono text-slate-500 uppercase tracking-widest">Network</p>
-                <span className="text-xs font-display font-bold uppercase tracking-widest text-white">TCP/IP_V6</span>
+                <span className="text-xs font-display font-bold uppercase tracking-widest text-slate-900 dark:text-white">TCP/IP_V6</span>
               </div>
             </div>
           </div>

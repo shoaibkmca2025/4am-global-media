@@ -39,13 +39,13 @@ const Philosophy: React.FC = () => {
   ];
 
   return (
-    <section ref={containerRef} className="py-64 bg-brand-dark relative overflow-hidden">
+    <section ref={containerRef} className="py-64 bg-white dark:bg-brand-dark transition-colors duration-500 relative overflow-hidden">
       {/* Immersive Parallax Background Text */}
       <motion.div 
         style={{ y: backgroundTextY }}
-        className="absolute inset-0 z-0 flex items-center justify-center opacity-[0.03] select-none pointer-events-none"
+        className="absolute inset-0 z-0 flex items-center justify-center opacity-[0.03] dark:opacity-[0.03] select-none pointer-events-none"
       >
-        <span className="text-[30rem] font-display font-bold text-white uppercase leading-none whitespace-nowrap">4AM_CORE</span>
+        <span className="text-[30rem] font-display font-bold text-slate-900 dark:text-white uppercase leading-none whitespace-nowrap">4AM_CORE</span>
       </motion.div>
 
       <div className="container mx-auto px-6 relative z-10">
@@ -61,10 +61,10 @@ const Philosophy: React.FC = () => {
                 <div className="w-12 h-[1px] bg-brand-primary" />
                 <span className="text-brand-primary font-mono font-bold tracking-[0.5em] uppercase text-xs">02 // MISSION_LOG</span>
               </div>
-              <h3 className="text-4xl md:text-6xl font-display font-bold uppercase tracking-tighter">Architectural <span className="text-brand-primary">Logic.</span></h3>
+              <h3 className="text-4xl md:text-6xl font-display font-bold uppercase tracking-tighter text-slate-900 dark:text-white">Architectural <span className="text-brand-primary">Logic.</span></h3>
             </div>
             <div className="max-w-xs">
-              <p className="text-xs font-mono text-slate-500 uppercase tracking-widest leading-relaxed">
+              <p className="text-xs font-mono text-slate-400 dark:text-slate-500 uppercase tracking-widest leading-relaxed">
                 We bridge the gap between technical infrastructure and market velocity. 
                 Vanity metrics are discarded for real revenue signals.
               </p>
@@ -72,7 +72,7 @@ const Philosophy: React.FC = () => {
           </motion.div>
 
           <div className="relative mb-64">
-            <h2 className="text-5xl md:text-7xl lg:text-[9rem] font-display font-bold leading-[0.85] text-white/5 tracking-tighter select-none uppercase">
+            <h2 className="text-5xl md:text-7xl lg:text-[9rem] font-display font-bold leading-[0.85] text-slate-900/5 dark:text-white/5 tracking-tighter select-none uppercase">
               {text}
             </h2>
             
@@ -87,13 +87,13 @@ const Philosophy: React.FC = () => {
                   ([x, y]) => `radial-gradient(circle 400px at ${x}px ${y}px, black 0%, transparent 100%)`
                 )
               }}
-              className="absolute inset-0 text-5xl md:text-7xl lg:text-[9rem] font-display font-bold leading-[0.85] text-white tracking-tighter pointer-events-none uppercase glow-text"
+              className="absolute inset-0 text-5xl md:text-7xl lg:text-[9rem] font-display font-bold leading-[0.85] text-slate-900 dark:text-white tracking-tighter pointer-events-none uppercase glow-text"
             >
               {text}
             </motion.h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-12 pt-32 border-t border-white/5">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-12 pt-32 border-t border-slate-100 dark:border-white/5">
              {differentiators.map((diff, idx) => (
                <motion.div 
                 key={idx} 
@@ -103,12 +103,12 @@ const Philosophy: React.FC = () => {
                 viewport={{ once: true }}
                 className="space-y-8 group/stat"
                >
-                 <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-brand-primary group-hover/stat:bg-brand-primary group-hover/stat:text-white transition-all duration-700 shadow-2xl border border-white/10 group-hover/stat:scale-110">
+                 <div className="w-16 h-16 rounded-2xl bg-slate-50 dark:bg-white/5 flex items-center justify-center text-brand-primary group-hover/stat:bg-brand-primary group-hover/stat:text-white transition-all duration-700 shadow-2xl border border-slate-200 dark:border-white/10 group-hover/stat:scale-110">
                    <diff.icon className="w-8 h-8" />
                  </div>
                  <div className="space-y-4">
-                   <h4 className="text-2xl font-display font-bold text-white uppercase tracking-tight leading-tight">{diff.label}</h4>
-                   <p className="text-xs text-slate-400 font-medium leading-relaxed italic">{diff.detail}</p>
+                   <h4 className="text-2xl font-display font-bold text-slate-900 dark:text-white uppercase tracking-tight leading-tight">{diff.label}</h4>
+                   <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed italic">{diff.detail}</p>
                  </div>
                  <div className="h-[2px] w-0 group-hover/stat:w-full bg-brand-primary transition-all duration-1000 ease-out" />
                </motion.div>
