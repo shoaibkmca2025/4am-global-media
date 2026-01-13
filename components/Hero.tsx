@@ -1,18 +1,113 @@
 
-import React, { useEffect, useState } from 'react';
-import { ArrowRight, Terminal, Cpu, Box, Activity, Shield, Zap, Globe } from 'lucide-react';
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
-import { useAuth } from './AuthContext';
+import React, { useEffect, useState, useMemo } from 'react';
+import { ArrowRight, Terminal, Cpu, Box, Activity, Shield, Zap, Globe, Signal, Binary, Loader2 } from 'lucide-react';
+import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Magnetic from './Magnetic';
 
+const DataStream: React.FC = () => {
+  const characters = "01$#!&<>[]{}ABCDEF";
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10">
+      {[...Array(10)].map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{ y: -100, x: `${i * 10}%`, opacity: 0 }}
+          animate={{ y: 1000, opacity: [0, 1, 1, 0] }}
+          transition={{
+            duration: 10 + Math.random() * 20,
+            repeat: Infinity,
+            ease: "linear",
+            delay: Math.random() * 10
+          }}
+          className="absolute text-[8px] font-mono text-brand-primary whitespace-pre leading-none"
+        >
+          {[...Array(50)].map(() => characters[Math.floor(Math.random() * characters.length)]).join('\n')}
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
+const LaunchButton: React.FC = () => {
+  const navigate = useNavigate();
+  const [isHovered, setIsHovered] = useState(false);
+  const [label, setLabel] = useState("Launch Strategy");
+  const targetLabel = "Initialize Uplink";
+  const originalLabel = "Launch Strategy";
+
+  useEffect(() => {
+    let iteration = 0;
+    let interval: number;
+
+    if (isHovered) {
+      interval = window.setInterval(() => {
+        setLabel(prev => 
+          targetLabel.split("").map((letter, index) => {
+            if (index < iteration) return targetLabel[index];
+            return "01$#!&"[Math.floor(Math.random() * 6)];
+          }).join("")
+        );
+        if (iteration >= targetLabel.length) clearInterval(interval);
+        iteration += 1;
+      }, 40);
+    } else {
+      setLabel(originalLabel);
+    }
+
+    return () => clearInterval(interval);
+  }, [isHovered]);
+
+  return (
+    <Magnetic strength={35}>
+      <motion.button 
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        whileTap={{ scale: 0.96 }}
+        onClick={() => navigate('/contact')}
+        className="relative px-12 py-7 bg-brand-primary text-white font-bold rounded-[2rem] shadow-[0_20px_40px_rgba(37,99,235,0.3)] hover:shadow-brand-primary/60 transition-all flex items-center gap-8 group overflow-hidden border border-white/10"
+      >
+        {/* Border Beam */}
+        <AnimatePresence>
+          {isHovered && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 pointer-events-none"
+            >
+              <motion.div 
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-[-200%] bg-[conic-gradient(from_0deg,transparent_70%,#ffffff_90%,transparent_100%)] opacity-30"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+        
+        <div className="relative z-10 flex items-center gap-6">
+          <span className="text-xs tracking-[0.4em] uppercase font-mono min-w-[180px] text-left">{label}</span>
+          <motion.div
+            animate={{ x: isHovered ? 8 : 0 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <ArrowRight className="w-5 h-5" />
+          </motion.div>
+        </div>
+      </motion.button>
+    </Magnetic>
+  );
+};
+
 const Hero: React.FC = () => {
   const [scrambleText, setScrambleText] = useState("OUR CORE.");
-  const targetText = "THE ENGINE.";
+  const targetText = "THE FUTURE.";
   const characters = "01$#!&*<>[]{}";
   const { scrollY } = useScroll();
-  const yOffset = useTransform(scrollY, [0, 800], [0, 100]);
-  const { user } = useAuth();
+  const yOffset = useTransform(scrollY, [0, 800], [0, 150]);
+  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
   const navigate = useNavigate();
 
   const mouseX = useMotionValue(0);
@@ -49,183 +144,193 @@ const Hero: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] }
+    }
+  };
+
   return (
-    <section id="hero" className="relative min-h-[95vh] 2xl:min-h-screen flex items-center pt-24 pb-48 overflow-hidden transition-colors duration-500">
-      {/* Atmospheric Background */}
+    <section id="hero" className="relative min-h-[100vh] flex items-center pt-20 pb-40 overflow-hidden bg-brand-dark">
+      <DataStream />
+      
+      {/* Dynamic Background Spotlights */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.05),transparent_70%)]" />
         <motion.div 
           style={{ 
-            x: useTransform(smoothMouseX, (v) => v * -0.02),
-            y: useTransform(smoothMouseY, (v) => v * -0.02)
+            x: useTransform(smoothMouseX, (v) => v * 0.5),
+            y: useTransform(smoothMouseY, (v) => v * 0.5),
           }}
-          className="absolute inset-0 opacity-20 dark:opacity-40"
-        >
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#3B82F6_1px,transparent_1px),linear-gradient(to_bottom,#3B82F6_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_60%,transparent_100%)]" />
-        </motion.div>
+          className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-brand-primary/10 blur-[140px] rounded-full pointer-events-none" 
+        />
+        <motion.div 
+          style={{ 
+            x: useTransform(smoothMouseX, (v) => v * -0.3),
+            y: useTransform(smoothMouseY, (v) => v * -0.3),
+          }}
+          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-brand-accent/5 blur-[120px] rounded-full pointer-events-none" 
+        />
       </div>
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-          <div className="lg:col-span-8 space-y-12">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        style={{ opacity: heroOpacity }}
+        className="container mx-auto px-6 relative z-10"
+      >
+        <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-9 space-y-12">
             <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="inline-flex items-center gap-4 px-5 py-2.5 rounded-full glass border border-white/20 shadow-lg"
+              variants={itemVariants}
+              className="inline-flex items-center gap-3 px-5 py-2 rounded-full glass border border-white/10 shadow-2xl"
             >
-              <div className="relative w-2 h-2">
-                <div className="absolute inset-0 bg-brand-primary rounded-full animate-ping" />
-                <div className="relative w-2 h-2 bg-brand-primary rounded-full shadow-[0_0_8px_#3B82F6]" />
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse shadow-[0_0_10px_#2563EB]" />
+                <span className="text-[10px] font-mono font-bold uppercase tracking-[0.5em] text-brand-primary">SYSTEM_OPERATIONAL</span>
               </div>
-              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.4em] text-brand-primary">4AM_ENGINE_ACTIVE // v4.0</span>
+              <div className="w-[1px] h-3 bg-white/10" />
+              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-slate-400">NODE_04 // GLOBAL</span>
             </motion.div>
 
             <div className="relative">
               <motion.h1 
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                className="text-6xl md:text-[8rem] 2xl:text-[10rem] font-display font-bold leading-[0.85] tracking-tighter text-slate-900 dark:text-white"
+                variants={itemVariants}
+                className="text-7xl md:text-[10rem] 2xl:text-[13rem] font-display font-bold leading-[0.75] tracking-tighter text-white"
               >
-                ENGINEERING <br/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary via-indigo-400 to-brand-accent">
+                CRAFTING <br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary via-brand-signal to-brand-accent italic glow-text">
                   {scrambleText}
                 </span>
               </motion.h1>
             </div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="space-y-10 max-w-2xl"
+              variants={itemVariants}
+              className="max-w-2xl"
             >
-              <p className="text-xl md:text-3xl text-slate-500 dark:text-slate-400 leading-[1.3] font-light tracking-tight">
-                We synthesize <span className="text-slate-900 dark:text-white font-medium italic underline decoration-brand-primary/30 underline-offset-8">elite architecture</span> with aggressive growth.
+              <p className="text-xl md:text-3xl text-slate-400 leading-tight font-light tracking-tight italic">
+                Engineering <span className="text-white font-medium border-b border-brand-primary/50">high-velocity ecosystems</span> where complex code bridges the gap to explosive market ROI.
               </p>
             </motion.div>
           </div>
 
-          <div className="hidden lg:block lg:col-span-4 relative h-full">
-            <motion.div
+          <div className="hidden lg:block lg:col-span-3">
+             <motion.div
               style={{ 
-                x: useTransform(smoothMouseX, (v) => v * 0.05),
-                y: useTransform(smoothMouseY, (v) => v * 0.05)
+                x: useTransform(smoothMouseX, (v) => v * 0.03),
+                y: useTransform(smoothMouseY, (v) => v * 0.03)
               }}
-              className="absolute inset-0 flex flex-col gap-6 justify-center"
+              className="space-y-6"
             >
               {[
-                { icon: Shield, label: 'Security', value: 'AES_256_ACTIVE', color: 'text-brand-primary' },
-                { icon: Zap, label: 'Performance', value: '0.8ms_LATENCY', color: 'text-brand-signal' }
+                { icon: Shield, label: 'Integrity', value: 'ECC_ENCRYPTED', color: 'text-brand-primary' },
+                { icon: Signal, label: 'Uplink', value: '1.2ms_LATENCY', color: 'text-brand-signal' },
+                { icon: Activity, label: 'Engine', value: 'v4.0.2_STABLE', color: 'text-brand-accent' }
               ].map((item, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 + i * 0.15 }}
-                  className="glass p-6 rounded-[2rem] border border-white/20 shadow-2xl flex items-center gap-6 group hover:border-brand-primary/40 transition-colors"
+                  variants={itemVariants}
+                  className="glass p-6 rounded-3xl border border-white/5 flex items-center gap-6 group hover:border-brand-primary/40 hover:bg-brand-primary/5 transition-all"
                 >
-                  <div className={`w-14 h-14 rounded-2xl bg-white dark:bg-white/5 flex items-center justify-center ${item.color} shadow-inner group-hover:scale-110 transition-transform`}>
+                  <div className={`w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center ${item.color} shadow-inner group-hover:scale-110 transition-transform`}>
                     <item.icon className="w-7 h-7" />
                   </div>
                   <div>
-                    <p className="text-[9px] font-mono text-slate-400 uppercase tracking-widest mb-1">{item.label}</p>
-                    <p className="text-sm font-bold font-mono tracking-tight">{item.value}</p>
+                    <p className="text-[8px] font-mono text-slate-500 uppercase tracking-widest mb-1">{item.label}</p>
+                    <p className="text-xs font-bold font-mono tracking-tight text-white">{item.value}</p>
                   </div>
                 </motion.div>
               ))}
             </motion.div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Corrected Integrated Control Deck - Bottom Bar */}
+      {/* Futuristic Bottom Control HUD */}
       <motion.div 
         style={{ y: yOffset }}
-        className="absolute bottom-10 left-6 right-6 max-w-[1440px] mx-auto z-40"
+        className="absolute bottom-12 left-6 right-6 max-w-[1440px] mx-auto z-40"
       >
-        {/* Buttons that sit "on top" of the bar */}
-        <div className="flex items-end gap-4 px-8 mb-[-24px] relative z-10">
-          <Magnetic strength={20}>
-            <button 
-              onClick={() => navigate('/services')}
-              className="px-10 py-6 bg-brand-primary text-white font-bold rounded-2xl shadow-[0_20px_40px_rgba(59,130,246,0.3)] hover:shadow-brand-primary/50 transition-all flex items-center gap-6 group overflow-hidden"
-            >
-              <span className="text-[10px] tracking-[0.2em] uppercase">Deploy Strategy</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </Magnetic>
-
-          <button className="flex items-center gap-4 px-8 py-5 glass rounded-2xl hover:bg-white dark:hover:bg-white/5 transition-all group border border-white/20 shadow-xl">
-             <div className="w-10 h-10 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center">
-               <Terminal className="w-5 h-5" />
+        <div className="flex items-end gap-6 mb-[-24px] relative z-10 px-8">
+          <LaunchButton />
+          
+          <button 
+            onClick={() => navigate('/services')}
+            className="flex items-center gap-5 px-10 py-6 glass rounded-[2rem] hover:bg-white/10 transition-all group"
+          >
+             <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-brand-signal">
+               <Binary className="w-6 h-6" />
              </div>
              <div className="text-left">
-               <p className="text-[7px] font-mono text-slate-400 uppercase tracking-widest mb-0.5">Explore_Logs</p>
-               <p className="text-[10px] font-bold uppercase tracking-tight text-slate-900 dark:text-white">Terminal Access</p>
+               <p className="text-[8px] font-mono text-slate-500 uppercase tracking-widest">Protocol_List</p>
+               <p className="text-xs font-bold uppercase tracking-tight text-white">Core Modules</p>
              </div>
           </button>
-
-          <div className="mb-4 ml-2">
-            <div className="w-8 h-8 rounded-full border border-brand-primary/30 flex items-center justify-center relative">
-               <div className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-pulse" />
-               <svg className="absolute inset-0 w-full h-full rotate-[-90deg]">
-                 <circle cx="16" cy="16" r="14" stroke="currentColor" strokeWidth="1" fill="transparent" className="text-brand-primary/20" />
-               </svg>
-            </div>
-          </div>
         </div>
 
-        {/* Main Metrics Bar */}
-        <div className="glass rounded-[2.5rem] p-8 md:flex items-center justify-between shadow-2xl border border-white/40 dark:border-white/10 backdrop-blur-[40px]">
+        <div className="glass rounded-[3.5rem] p-10 flex flex-col md:flex-row items-center justify-between shadow-3xl border border-white/5">
           <div className="flex items-center gap-16">
-            <div className="flex items-center gap-5 group cursor-default">
-              <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl flex items-center justify-center border border-brand-primary/20 group-hover:bg-brand-primary group-hover:text-white transition-all shadow-lg text-brand-primary">
-                <Cpu className="w-6 h-6" />
+            <div className="flex items-center gap-5">
+              <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary border border-brand-primary/20">
+                <Cpu className="w-6 h-6 animate-pulse" />
               </div>
-              <div className="flex flex-col">
-                <span className="text-[9px] font-mono text-slate-400 uppercase tracking-widest mb-0.5">Hardware_Tier</span>
-                <span className="text-xs font-display font-bold text-slate-800 dark:text-slate-200 uppercase tracking-tighter">Quantum_01</span>
+              <div>
+                <span className="text-[8px] font-mono text-slate-500 uppercase tracking-widest block mb-0.5">Core_Architecture</span>
+                <span className="text-xs font-display font-bold uppercase tracking-tighter text-white">4AM_NEXUS_v4</span>
               </div>
             </div>
             
-            <div className="h-10 w-[1px] bg-slate-200 dark:bg-white/10" />
-
-            {/* Network Stability - Matching the bars in the screenshot */}
-            <div className="flex items-center gap-5">
-              <div className="flex flex-col items-start gap-1.5">
-                <div className="flex gap-1.5">
-                  {[...Array(12)].map((_, i) => (
-                    <motion.div 
-                      key={i} 
-                      animate={{ 
-                        opacity: [0.3, 1, 0.3],
-                        scaleY: [1, 1.2, 1]
-                      }} 
-                      transition={{ 
-                        duration: 2, 
-                        repeat: Infinity, 
-                        delay: i * 0.1,
-                        ease: "easeInOut"
-                      }} 
-                      className={`w-1.5 h-4 rounded-full ${i < 4 ? 'bg-brand-primary/80 shadow-[0_0_8px_#3B82F6]' : 'bg-slate-200 dark:bg-white/10'}`} 
-                    />
-                  ))}
-                </div>
-                <span className="text-[8px] font-mono text-slate-400 uppercase tracking-widest">Network_Stability</span>
+            <div className="hidden lg:flex flex-col gap-2">
+              <div className="flex gap-1.5 items-end h-4">
+                {[...Array(24)].map((_, i) => (
+                  <motion.div 
+                    key={i} 
+                    animate={{ 
+                      height: [4, Math.random() * 16 + 4, 4]
+                    }} 
+                    transition={{ 
+                      duration: 1.5, 
+                      repeat: Infinity, 
+                      delay: i * 0.05 
+                    }} 
+                    className={`w-1 rounded-full ${i % 3 === 0 ? 'bg-brand-primary' : 'bg-white/10'}`} 
+                  />
+                ))}
               </div>
+              <span className="text-[7px] font-mono text-slate-500 uppercase tracking-widest">Signal_Throughput_Active</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-10">
-            <div className="text-right">
-              <p className="text-[8px] font-mono text-slate-400 uppercase tracking-widest mb-1">Compute_Sync</p>
-              <p className="text-xs font-bold text-brand-primary uppercase">Optimized // 100%</p>
+          <div className="flex items-center gap-12 mt-8 md:mt-0">
+            <div className="text-right hidden sm:block">
+              <p className="text-[8px] font-mono text-slate-500 uppercase mb-1">Global_Sync</p>
+              <div className="flex items-center gap-2 justify-end">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">128_NODES_SECURE</p>
+              </div>
             </div>
-            
-            <div className="bg-emerald-500/10 px-6 py-3 rounded-full flex items-center gap-3 border border-emerald-500/20">
-              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_#10B981]" />
-              <span className="text-[10px] font-display font-bold text-emerald-600 uppercase tracking-widest">Uplink_Established</span>
+            <div className="h-10 w-[1px] bg-white/10 hidden sm:block" />
+            <div className="flex items-center gap-4">
+              <Globe className="w-5 h-5 text-brand-signal animate-spin-slow" />
+              <div className="text-left">
+                <p className="text-[8px] font-mono text-slate-500 uppercase tracking-widest">Network</p>
+                <span className="text-xs font-display font-bold uppercase tracking-widest text-white">TCP/IP_V6</span>
+              </div>
             </div>
           </div>
         </div>

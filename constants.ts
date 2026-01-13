@@ -4,17 +4,16 @@ import { Service, Client, NavItem, Article, Project } from './types';
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', href: '/' },
   { label: 'Services', href: '/services' },
-  { label: 'Case Studies', href: '/#projects' },
-  { label: 'Insights', href: '/#insights' },
-  { label: 'Network', href: '/#clients' },
-  { label: 'Contact', href: '/#contact' },
+  { label: 'Work', href: '/work' },
+  { label: 'Insights', href: '/insights' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export const PROJECTS: Project[] = [
   {
     id: 1,
     title: "Quantum Nexus",
-    category: "Software Development",
+    category: "Website & App Development",
     image: "https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=2564&auto=format&fit=crop",
     description: "Enterprise-grade blockchain middleware for secure data synchronization.",
     challenge: "Developing a low-latency system that could handle 10k+ concurrent transactions while maintaining 100% data integrity across decentralized nodes.",
@@ -24,7 +23,7 @@ export const PROJECTS: Project[] = [
   {
     id: 2,
     title: "Vanguard Growth",
-    category: "Digital Marketing",
+    category: "Paid Ads & Lead Generation",
     image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop",
     description: "Multi-channel ROAS optimization for a global FinTech disruptor.",
     challenge: "The client was seeing diminishing returns on Meta and Google Ads, with customer acquisition costs (CAC) rising by 40% year-over-year.",
@@ -34,7 +33,7 @@ export const PROJECTS: Project[] = [
   {
     id: 3,
     title: "Aura Commerce",
-    category: "Mobile App",
+    category: "Branding & Creative",
     image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=2670&auto=format&fit=crop",
     description: "A luxury fashion marketplace with integrated AR try-on features.",
     challenge: "High return rates due to customers misjudging fit and style during online shopping.",
@@ -79,43 +78,113 @@ export const INITIAL_ARTICLES: Article[] = [
 export const SERVICES: Service[] = [
   {
     id: 'development',
-    title: 'Custom Software Engineering',
-    description: 'Bespoke web and mobile applications engineered for high performance and infinite scale.',
+    title: 'Software & App Engineering',
+    description: 'High-performance digital products engineered for extreme scale, sub-1ms speed, and high-ticket conversion.',
     icon: 'code',
-    longDescription: 'We build the backbone of your business. From complex CRM systems to consumer-facing mobile apps, our engineering team uses cutting-edge technologies like React, Node, and Rust to deliver robust products.',
-    features: ['SaaS Architecture', 'Cross-Platform Mobile Apps', 'API Integration & Design', 'Cloud Infrastructure', 'Legacy System Modernization']
+    longDescription: 'We dont just build websites; we engineer revenue-generating assets. Our development philosophy is rooted in "Stateless Architecture"—ensuring your platform remains lightning-fast regardless of user load. We bridge the gap between complex backend logic and intuitive, world-class user interfaces.',
+    methodology: 'Agile Modular Framework: We break complex software into secure, independent micro-modules that allow for rapid deployment and easy horizontal scaling without downtime.',
+    features: [
+      'Custom React/Next.js Web Applications',
+      'Native iOS & Android Mobile Engineering',
+      'Scalable SaaS Infrastructure Architecture',
+      'High-Performance E-commerce Engines',
+      'Enterprise API Design & Integration',
+      'Web3 & Blockchain Middleware'
+    ],
+    outcomes: [
+      '99.9% Core System Uptime',
+      '40% Reduction in Technical Debt',
+      'Sub-2s Page Load Performance',
+      'Optimized Security Protocols'
+    ]
   },
   {
-    id: 'immersive',
-    title: 'AR & VR Motion Systems',
-    description: 'Integrating high-fidelity animation into immersive spatial environments for unprecedented realism.',
-    icon: 'layers',
-    longDescription: 'AR and VR motion graphics integrate animation into immersive environments, enhancing user interaction and realism. By combining motion with augmented or virtual spaces, designers can guide attention, tell stories, and create experiences that feel dynamic.',
-    features: ['Spatial UI Design', 'Interactive 3D Assets', 'Immersive Storytelling', 'VR Environment Animation', 'Augmented Reality Filters']
+    id: 'social',
+    title: 'Social Media Domination',
+    description: 'Strategic brand presence and high-end content production that drives market authority and viral engagement.',
+    icon: 'share-2',
+    longDescription: 'Social media is no longer about posting; it is about psychological positioning. We use "Attention-First" strategies to ensure your brand isn’t just seen, but remembered. We produce cinematic-quality content that signals elite status to your target audience.',
+    methodology: 'The Narrative Loop: We create content cycles that build trust over 7 unique touchpoints, transforming passive scrollers into high-intent leads through authority-driven storytelling.',
+    features: [
+      'Cinematic Content Production (Reels/TikTok)',
+      'Brand Identity & Voice Development',
+      'Influencer & Creator Management',
+      'High-Growth Community Building',
+      'Social Sentiment Data Analysis',
+      'Viral Hook Engineering'
+    ],
+    outcomes: [
+      '300% Average Engagement Growth',
+      'Primary Authority Positioning',
+      'Sustainable Organic Reach',
+      'High-Intent Lead Generation'
+    ]
   },
   {
-    id: 'marketing',
-    title: 'Digital Growth & Ads',
-    description: 'Data-driven marketing strategies that prioritize ROAS and sustainable brand scaling.',
-    icon: 'trending-up',
-    longDescription: 'Our digital marketing division is obsessed with ROI. We combine high-velocity ad testing with deep psychological insights to capture and convert your ideal audience.',
-    features: ['Google & Meta Ads Management', 'Full-Funnel CRO', 'Advanced Data Analytics', 'Retargeting Strategies', 'Email Automation']
+    id: 'ads',
+    title: 'Performance Paid Ads',
+    description: 'ROI-focused performance marketing that converts traffic into consistent, scalable revenue streams.',
+    icon: 'zap',
+    longDescription: 'We approach paid ads as a pure engineering problem. By treating every dollar spent as a data point, we ruthlessly optimize for Return on Ad Spend (ROAS). We handle the full funnel—from cold interest to high-frequency retargeting.',
+    methodology: 'High-Velocity Testing (HVT): We deploy dozens of ad variations simultaneously to identify winning variables within 48 hours, allowing us to scale profitable campaigns with surgical precision.',
+    features: [
+      'Meta & Instagram Ads Scaling',
+      'Google Search & Display Mastery',
+      'High-Ticket YouTube Ad Funnels',
+      'Precision Retargeting Frameworks',
+      'Dynamic Creative Optimization',
+      'Advanced Attribution Tracking'
+    ],
+    outcomes: [
+      'Guaranteed ROAS Improvement',
+      'Scalable Daily Lead Volume',
+      'Reduced Customer Acquisition Cost (CAC)',
+      'Predictable Revenue Growth'
+    ]
   },
   {
     id: 'seo',
-    title: 'Content & SEO Mastery',
-    description: 'Command the search results and dominate your niche with authority-building content.',
-    icon: 'target',
-    longDescription: 'SEO is more than just ranking; it\'s about being the definitive answer to your customer\'s questions. We build content ecosystems that establish your startup as a category leader.',
-    features: ['Technical SEO Audits', 'Keyword Intent Analysis', 'High-Authority Backlinking', 'AI-Augmented Content', 'Local SEO Dominance']
+    title: 'SEO & Topical Authority',
+    description: 'Long-term organic growth frameworks that establish your brand as the definitive leader in your category.',
+    icon: 'search',
+    longDescription: 'Modern SEO isn’t about keywords; it’s about becoming the "Topical Authority." We build semantic content ecosystems that search engines cannot ignore. We focus on ranking for the high-intent queries that actually drive revenue, not just vanity traffic.',
+    methodology: 'Semantic Hub-and-Spoke: We build massive "Pillar Pages" supported by deep-dive clusters, signaling to search engines that your brand is the definitive expert in your niche.',
+    features: [
+      'Technical SEO Infrastructure Audits',
+      'Semantic Search Content Strategy',
+      'High-Authority Link Acquisition',
+      'AI-Driven Market Intent Mapping',
+      'Local & Global SERP Domination',
+      'Content Velocity Scaling'
+    ],
+    outcomes: [
+      'Rank 1 for High-Intent Queries',
+      'Consistent Organic Traffic Flow',
+      'Reduced Long-Term Ad Spend',
+      'Compound Market Influence'
+    ]
   },
   {
-    id: 'crypto',
-    title: 'Web3 & Blockchain',
-    description: 'Strategic advisory and development for decentralized finance and NFT ecosystems.',
-    icon: 'bitcoin',
-    longDescription: 'Navigate the frontier of finance. We help startups launch tokens, build dApps, and integrate blockchain technology to create transparent, trustless user experiences.',
-    features: ['Smart Contract Auditing', 'dApp Development', 'Tokenomics Design', 'DeFi Integration', 'Layer 2 Scaling']
+    id: 'creative',
+    title: 'Branding & Visual Identity',
+    description: 'Premium visual design and creative direction that positions your brand for undisputed market leadership.',
+    icon: 'palette',
+    longDescription: 'Visuals speak before words. We design "Signal-Heavy" identities—visual systems that immediately communicate high value and technical competence. Our designs are built to look futuristic, clean, and authoritative across all digital nodes.',
+    methodology: 'Cognitive Branding: We use color theory and spatial design to evoke specific emotional responses that align with your business objectives and audience psychology.',
+    features: [
+      'High-End Logo & Identity Design',
+      'UI/UX Design Systems (Figma)',
+      'Motion Graphics & AR Assets',
+      'Brand Style Guides & Typography',
+      'Marketing Collateral Creation',
+      'Futuristic UI Elements'
+    ],
+    outcomes: [
+      'Instant Brand Recognition',
+      'High-End Market Positioning',
+      'Cohesive Visual Ecosystem',
+      'Enhanced User Trust Scores'
+    ]
   }
 ];
 

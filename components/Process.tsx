@@ -1,38 +1,38 @@
 
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import { Search, PenTool, Rocket, Cpu, ArrowRight, Zap, Target, Layers } from 'lucide-react';
+import { Search, PenTool, Rocket, Cpu, ArrowRight, Zap, Target, Layers, FileText, Activity } from 'lucide-react';
 
 const steps = [
   {
     id: '01',
-    title: 'Initialize',
-    description: 'Audit of your current digital infrastructure. We identify latency points and growth friction.',
+    title: 'Discovery & Audit',
+    description: 'A deep architectural analysis of your current business, goals, audience, and market landscape to identify core friction points.',
     icon: Search,
     color: 'text-brand-primary',
     border: 'group-hover:border-brand-primary/50'
   },
   {
     id: '02',
-    title: 'Architect',
-    description: 'Engineering the strategic blueprint. We select the high-performance tech stack.',
-    icon: Layers,
+    title: 'Strategy & Planning',
+    description: 'Engineering a clear growth roadmap aligned with measurable KPIs and ROI objectives before a single pixel is moved.',
+    icon: FileText,
     color: 'text-brand-accent',
     border: 'group-hover:border-brand-accent/50'
   },
   {
     id: '03',
-    title: 'Deploy',
-    description: 'High-velocity execution and multi-channel launch. Bridging the gap from vision to reality.',
+    title: 'Execution & Launch',
+    description: 'High-performance deployment of custom software, conversion funnels, brand content, and multi-channel ad systems.',
     icon: Rocket,
     color: 'text-brand-signal',
     border: 'group-hover:border-brand-signal/50'
   },
   {
     id: '04',
-    title: 'Optimize',
-    description: 'Real-time scaling and result refinement. Architecting infinite growth loops.',
-    icon: Target,
+    title: 'Optimization & Growth',
+    description: 'Data-driven testing and continuous improvement loops to ensure long-term scalability and maximum market authority.',
+    icon: Activity,
     color: 'text-emerald-500',
     border: 'group-hover:border-emerald-500/50'
   }
@@ -63,10 +63,10 @@ const Process: React.FC = () => {
               className="flex items-center gap-4 mb-6"
             >
               <div className="w-12 h-[1px] bg-brand-primary" />
-              <span className="text-brand-primary font-mono font-bold tracking-[0.6em] uppercase text-xs">The Methodology</span>
+              <span className="text-brand-primary font-mono font-bold tracking-[0.6em] uppercase text-xs">Proven Framework</span>
             </motion.div>
             <h3 className="text-6xl md:text-9xl font-display font-bold text-slate-900 dark:text-white tracking-tighter uppercase leading-[0.8] mb-8">
-              HOW WE <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary via-indigo-400 to-emerald-500">OPERATE.</span>
+              OUR 4-STEP <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary via-indigo-400 to-emerald-500">PROCESS.</span>
             </h3>
           </div>
 
@@ -91,11 +91,11 @@ const Process: React.FC = () => {
                     </span>
                   </div>
 
-                  <h4 className="text-2xl font-display font-bold text-slate-900 dark:text-white uppercase tracking-tight mb-4">
+                  <h4 className="text-2xl font-display font-bold text-slate-900 dark:text-white uppercase tracking-tight mb-4 leading-tight">
                     {step.title}
                   </h4>
                   
-                  <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-8">
+                  <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-8 font-medium">
                     {step.description}
                   </p>
 
@@ -113,7 +113,7 @@ const Process: React.FC = () => {
             initial={{ opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="mt-32 p-10 bg-slate-900 dark:bg-white rounded-[3rem] text-white dark:text-slate-900 flex flex-col lg:flex-row items-center justify-between gap-12 shadow-3xl overflow-hidden relative group"
+            className="mt-32 p-12 bg-slate-900 dark:bg-white rounded-[3rem] text-white dark:text-slate-900 flex flex-col lg:flex-row items-center justify-between gap-12 shadow-3xl overflow-hidden relative group"
           >
             <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/20 blur-[100px] pointer-events-none" />
             
@@ -122,8 +122,8 @@ const Process: React.FC = () => {
                 <Zap className="w-8 h-8 text-brand-primary animate-pulse" />
               </div>
               <div>
-                <p className="font-display font-bold uppercase tracking-tight text-3xl">System Integrated.</p>
-                <p className="text-white/60 dark:text-slate-900/60 font-medium">Ready to synchronize your project with 4AM Global.</p>
+                <p className="font-display font-bold uppercase tracking-tight text-3xl">Built for Growth.</p>
+                <p className="text-white/60 dark:text-slate-900/60 font-medium">Ready to build a digital system that works while you sleep?</p>
               </div>
             </div>
             
@@ -131,7 +131,7 @@ const Process: React.FC = () => {
               onClick={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })}
               className="relative z-10 px-12 py-5 bg-brand-primary text-white font-bold rounded-2xl text-xs uppercase tracking-[0.3em] hover:shadow-[0_20px_40px_rgba(59,130,246,0.4)] hover:scale-105 transition-all active:scale-95 overflow-hidden"
             >
-              <span className="relative z-10">Start Mission</span>
+              <span className="relative z-10">Book Strategy Call</span>
             </button>
           </motion.div>
         </div>

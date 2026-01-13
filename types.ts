@@ -6,6 +6,8 @@ export interface Service {
   icon: string;
   longDescription?: string;
   features?: string[];
+  methodology?: string;
+  outcomes?: string[];
 }
 
 export interface Client {
@@ -69,8 +71,5 @@ export interface Opportunity {
   description: string;
   requirements: string[];
 }
-
-// Global process definition removed as it is already declared in the environment types.
-// This prevents "Cannot redeclare block-scoped variable 'process'" errors.
 
 export const types = true;

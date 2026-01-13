@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
 import { PROJECTS } from '../constants';
@@ -57,9 +56,17 @@ const ProjectCard: React.FC<{ project: Project; index: number; onClick: () => vo
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent opacity-90 transition-opacity duration-500" />
           
           <div className="absolute top-2 left-2">
-            <span className="px-1.5 py-0.5 bg-brand-primary/70 backdrop-blur-md border border-white/10 rounded-full text-[5px] font-mono font-bold text-white uppercase tracking-[0.1em] shadow-md">
+            <motion.span 
+              variants={{
+                hover: { scale: 1.15, opacity: 1, y: 0 },
+                initial: { scale: 1, opacity: 0.7, y: 2 }
+              }}
+              initial="initial"
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="px-1.5 py-0.5 bg-brand-primary/80 backdrop-blur-md border border-white/10 rounded-full text-[5px] font-mono font-bold text-white uppercase tracking-[0.1em] shadow-md inline-block"
+            >
               {project.category}
-            </span>
+            </motion.span>
           </div>
 
           <div className="absolute bottom-2 left-3 right-3 text-white">

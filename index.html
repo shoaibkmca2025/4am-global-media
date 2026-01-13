@@ -19,11 +19,11 @@
             },
             colors: {
               brand: {
-                obsidian: '#020202',
-                dark: '#020202',
-                primary: '#3B82F6',
-                accent: '#8B5CF6',
-                signal: '#00F0FF'
+                obsidian: '#05070A',
+                dark: '#05070A',
+                primary: '#2563EB',
+                accent: '#7C3AED',
+                signal: '#00D1FF'
               }
             },
             animation: {
@@ -33,13 +33,26 @@
               'float': 'float 6s ease-in-out infinite',
               'marquee': 'marquee 40s linear infinite',
               'spin-slow': 'spin 20s linear infinite',
-              'spin-slow-reverse': 'spin-reverse 25s linear infinite',
+              'shimmer': 'shimmer 2.5s linear infinite',
+              'grain': 'grain 8s steps(10) infinite',
             },
             keyframes: {
               mesh: {
                 '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-                '33%': { transform: 'translate(10%, -10%) scale(1.1)' },
-                '66%': { transform: 'translate(-15%, 5%) scale(0.9)' },
+                '33%': { transform: 'translate(5%, -5%) scale(1.05)' },
+                '66%': { transform: 'translate(-5%, 5%) scale(0.95)' },
+              },
+              grain: {
+                '0%, 100%': { transform: 'translate(0, 0)' },
+                '10%': { transform: 'translate(-5%, -10%)' },
+                '20%': { transform: 'translate(-15%, 5%)' },
+                '30%': { transform: 'translate(7%, -25%)' },
+                '40%': { transform: 'translate(-5%, 25%)' },
+                '50%': { transform: 'translate(-15%, 10%)' },
+                '60%': { transform: 'translate(15%, 0%)' },
+                '70%': { transform: 'translate(0%, 15%)' },
+                '80%': { transform: 'translate(3%, 35%)' },
+                '90%': { transform: 'translate(-10%, 10%)' },
               },
               scanline: {
                 '0%': { transform: 'translateY(-100%)' },
@@ -52,10 +65,6 @@
               marquee: {
                 '0%': { transform: 'translateX(0%)' },
                 '100%': { transform: 'translateX(-50%)' },
-              },
-              'spin-reverse': {
-                '0%': { transform: 'rotate(0deg)' },
-                '100%': { transform: 'rotate(-360deg)' },
               }
             }
           },
@@ -64,14 +73,26 @@
     </script>
     <style>
       :root {
-        --brand-blue: #3B82F6;
-        --brand-purple: #8B5CF6;
+        --brand-blue: #2563EB;
+        --brand-purple: #7C3AED;
       }
 
       body {
         overflow-x: hidden;
+        background-color: #05070A;
       }
       
+      /* Cinematic Noise Overlay */
+      .noise-overlay {
+        position: fixed;
+        inset: -200%;
+        z-index: 100;
+        background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+        opacity: 0.04;
+        pointer-events: none;
+        animation: grain 8s steps(10) infinite;
+      }
+
       .mesh-bg {
         position: fixed;
         top: -50%;
@@ -80,25 +101,19 @@
         height: 200%;
         z-index: -2;
         background: 
-          radial-gradient(circle at 70% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
-          radial-gradient(circle at 30% 70%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
-          radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.03) 0%, transparent 50%);
-        filter: blur(80px);
-      }
-
-      .dark .mesh-bg {
-        background: 
-          radial-gradient(circle at 70% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
-          radial-gradient(circle at 30% 70%, rgba(139, 92, 246, 0.12) 0%, transparent 40%);
+          radial-gradient(circle at 70% 30%, rgba(37, 99, 235, 0.12) 0%, transparent 40%),
+          radial-gradient(circle at 30% 70%, rgba(124, 58, 237, 0.1) 0%, transparent 40%),
+          radial-gradient(circle at 50% 50%, rgba(0, 209, 255, 0.05) 0%, transparent 50%);
         filter: blur(100px);
+        opacity: 0.6;
       }
 
       .grid-bg {
         position: fixed;
         inset: 0;
         background-image: 
-          linear-gradient(to right, rgba(0,0,0,0.02) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(0,0,0,0.02) 1px, transparent 1px);
+          linear-gradient(to right, rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
         background-size: 60px 60px;
         pointer-events: none;
         z-index: -1;
@@ -106,43 +121,39 @@
 
       .dark .grid-bg {
         background-image: 
-          linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+          linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
       }
 
       .glass {
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(24px);
-        border: 1px solid rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       .dark .glass {
-        background: rgba(8, 8, 8, 0.8);
+        background: rgba(10, 15, 30, 0.6);
         border: 1px solid rgba(255, 255, 255, 0.05);
       }
 
-      .scanline {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100px;
-        background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.05), transparent);
-        z-index: 100;
-        pointer-events: none;
-        animation: scanline 8s linear infinite;
+      .reveal-container {
+        mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
       }
 
       ::-webkit-scrollbar { width: 4px; }
       ::-webkit-scrollbar-track { background: transparent; }
       ::-webkit-scrollbar-thumb {
-        background: rgba(59, 130, 246, 0.4);
+        background: rgba(37, 99, 235, 0.4);
         border-radius: 10px;
       }
 
-      @keyframes scanline {
-        0% { transform: translateY(-100%); }
-        100% { transform: translateY(100vh); }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+      /* Glow Text Effect */
+      .glow-text {
+        text-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
       }
     </style>
   <script type="importmap">
@@ -155,20 +166,21 @@
     "framer-motion": "https://esm.sh/framer-motion@10.16.16?external=react,react-dom",
     "lucide-react": "https://esm.sh/lucide-react@0.330.0?external=react,react-dom",
     "react-router-dom": "https://esm.sh/react-router-dom@6.22.0?external=react,react-dom",
+    "@google/genai": "https://esm.sh/@google/genai@^1.35.0",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
     "vite": "https://esm.sh/vite@^7.3.1",
-    "@google/genai": "https://esm.sh/@google/genai@^1.35.0"
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
   }
 }
 </script>
 <link rel="stylesheet" href="/index.css">
 </head>
-  <body class="bg-slate-50 text-slate-900 dark:bg-brand-dark dark:text-white transition-colors duration-500 selection:bg-brand-primary selection:text-white">
+  <body class="bg-brand-dark text-white selection:bg-brand-primary/30 selection:text-white">
+    <div class="noise-overlay"></div>
     <div class="mesh-bg animate-mesh"></div>
     <div class="grid-bg"></div>
-    <div class="scanline"></div>
     <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
   <script type="module" src="/index.tsx"></script>
 </body>
 </html>

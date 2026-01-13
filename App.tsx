@@ -1,13 +1,13 @@
 
-import React, { useState, useEffect } from 'react';
-import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import LandingPage from './components/LandingPage';
 import ServicesPage from './components/ServicesPage';
-import Login from './components/Login';
-import Register from './components/Register';
-import Dashboard from './components/Dashboard';
 import ServiceDetail from './components/ServiceDetail';
+import WorkPage from './components/WorkPage';
+import InsightsPage from './components/InsightsPage';
+import ContactPage from './components/ContactPage';
 import Footer from './components/Footer';
 import BackgroundParticles from './components/BackgroundParticles';
 import CustomCursor from './components/CustomCursor';
@@ -35,25 +35,22 @@ const ScrollIndicator: React.FC = () => {
 };
 
 const LayoutWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const location = useLocation();
-  const isDashboard = location.pathname.startsWith('/dashboard');
-
   return (
     <div className="min-h-screen transition-colors duration-300 selection:bg-brand-primary selection:text-white">
       <CustomCursor />
-      {!isDashboard && <ScrollIndicator />}
+      <ScrollIndicator />
       
       <div className="relative z-10 flex flex-col min-h-screen">
-        {!isDashboard && <Navbar />}
+        <Navbar />
         
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col pt-20">
           {children}
         </div>
 
-        {!isDashboard && <Footer />}
+        <Footer />
       </div>
       
-      {!isDashboard && <AIChatbot />}
+      <AIChatbot />
       <BackgroundParticles />
     </div>
   );
@@ -71,9 +68,9 @@ function App() {
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/services" element={<ServicesPage />} />
                 <Route path="/services/:id" element={<ServiceDetail />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/dashboard/*" element={<Dashboard />} />
+                <Route path="/work" element={<WorkPage />} />
+                <Route path="/insights" element={<InsightsPage />} />
+                <Route path="/contact" element={<ContactPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </LayoutWrapper>

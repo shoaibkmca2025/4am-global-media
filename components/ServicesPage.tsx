@@ -1,9 +1,8 @@
-
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { SERVICES } from '../constants';
-import { Instagram, Target, Code, TrendingUp, PenTool, Bitcoin, ArrowRight, Zap, Shield, Cpu, Globe, ArrowLeft } from 'lucide-react';
+import { Instagram, Target, Code, TrendingUp, PenTool, Bitcoin, ArrowRight, Zap, Shield, Cpu, Globe, ArrowLeft, Check, Minus } from 'lucide-react';
 
 const iconMap: any = {
   instagram: <Instagram className="w-6 h-6" />,
@@ -14,6 +13,27 @@ const iconMap: any = {
   bitcoin: <Bitcoin className="w-6 h-6" />,
 };
 
+const pricingTiers = [
+  { 
+    name: 'Growth', 
+    price: 'From $2,500', 
+    desc: 'Foundational growth for scaling startups.',
+    features: ['Custom Landing Page', 'Basic SEO Setup', 'Single Ad Channel', 'Weekly Reporting', 'Core Maintenance']
+  },
+  { 
+    name: 'Scale', 
+    price: 'From $7,500', 
+    desc: 'Aggressive multi-channel expansion.',
+    features: ['Full Web App Suite', 'Technical SEO Audit', 'Multi-channel Ads', 'Bi-weekly Strategy Sync', 'Conversion Optimization', 'Creative Direction']
+  },
+  { 
+    name: 'Enterprise', 
+    price: 'Custom', 
+    desc: 'Total digital dominance for industry leaders.',
+    features: ['Custom Tech Infrastructure', 'Global Organic Strategy', 'Unlimited Ad Management', 'Dedicated Architect Team', 'Real-time Signal Dashboards', 'Full Content Studio']
+  }
+];
+
 const ServicesPage: React.FC = () => {
   const navigate = useNavigate();
 
@@ -22,7 +42,7 @@ const ServicesPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="pt-32 pb-48 relative overflow-hidden">
+    <div className="pt-32 pb-48 relative overflow-hidden bg-white dark:bg-brand-dark transition-colors duration-500">
       {/* Decorative Orbs */}
       <div className="absolute top-[10%] -left-48 w-[600px] h-[600px] bg-brand-primary/5 blur-[160px] rounded-full pointer-events-none" />
       <div className="absolute bottom-[20%] -right-48 w-[500px] h-[500px] bg-brand-accent/5 blur-[160px] rounded-full pointer-events-none" />
@@ -50,7 +70,7 @@ const ServicesPage: React.FC = () => {
               className="flex items-center gap-4 mb-8"
             >
               <div className="w-12 h-[1px] bg-brand-primary" />
-              <span className="text-brand-primary font-mono font-bold tracking-[0.5em] uppercase text-xs">Full Capabilities</span>
+              <span className="text-brand-primary font-mono font-bold tracking-[0.5em] uppercase text-xs">Capability Spectrum</span>
             </motion.div>
             
             <motion.h1 
@@ -59,9 +79,9 @@ const ServicesPage: React.FC = () => {
               transition={{ delay: 0.1, duration: 1, ease: [0.19, 1, 0.22, 1] }}
               className="text-6xl md:text-9xl font-display font-bold text-slate-900 dark:text-white tracking-tighter uppercase leading-[0.85] mb-12"
             >
-              SOLUTIONS <br/>
+              THE CORE <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary via-indigo-500 to-brand-accent">
-                AT SCALE.
+                OFFERING.
               </span>
             </motion.h1>
 
@@ -71,12 +91,12 @@ const ServicesPage: React.FC = () => {
               transition={{ delay: 0.3 }}
               className="text-2xl text-slate-500 dark:text-slate-400 font-light max-w-2xl leading-relaxed italic"
             >
-              We don't just build websites or run ads. We engineer growth ecosystems that synchronize your technical architecture with your market presence.
+              From custom code to viral growth, we provide the full-stack infrastructure required for category leadership.
             </motion.p>
           </div>
 
           {/* Detailed Services Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 mb-48">
             {SERVICES.map((service, index) => (
               <motion.div
                 key={service.id}
@@ -89,7 +109,7 @@ const ServicesPage: React.FC = () => {
               >
                 <div className="flex flex-col h-full">
                   <div className="w-16 h-16 bg-white dark:bg-white/5 rounded-2xl flex items-center justify-center text-brand-primary shadow-sm mb-12 group-hover:scale-110 transition-transform duration-500 border border-slate-100 dark:border-white/5">
-                    {iconMap[service.icon]}
+                    {iconMap[service.icon] || <Zap className="w-6 h-6" />}
                   </div>
                   
                   <h2 className="text-4xl font-display font-bold text-slate-900 dark:text-white uppercase tracking-tight mb-6 group-hover:text-brand-primary transition-colors">
@@ -101,7 +121,7 @@ const ServicesPage: React.FC = () => {
                   </p>
 
                   <div className="space-y-4 mb-12 flex-grow">
-                    {service.features?.slice(0, 3).map((feature) => (
+                    {service.features?.slice(0, 4).map((feature) => (
                       <div key={feature} className="flex items-center gap-4">
                         <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
                         <span className="text-sm font-bold text-slate-400 uppercase tracking-widest">{feature}</span>
@@ -124,8 +144,51 @@ const ServicesPage: React.FC = () => {
             ))}
           </div>
 
-          {/* Stats / Trust Bar */}
-          <div className="mt-48 grid grid-cols-1 md:grid-cols-3 gap-12 pt-24 border-t border-slate-100 dark:border-white/5">
+          {/* Pricing Matrix Section */}
+          <div className="mb-48">
+            <div className="text-center mb-24">
+              <h2 className="text-sm font-mono font-bold text-brand-primary uppercase tracking-[0.5em] mb-4">Engagement Architecture</h2>
+              <h3 className="text-5xl md:text-7xl font-display font-bold uppercase tracking-tighter">Choose Your <br /> <span className="text-brand-primary">Growth Tier.</span></h3>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {pricingTiers.map((tier, i) => (
+                <div 
+                  key={tier.name}
+                  className={`glass rounded-[3rem] p-10 border transition-all duration-500 flex flex-col ${
+                    i === 1 ? 'border-brand-primary/50 shadow-3xl scale-105 z-10' : 'border-white/40 dark:border-white/5'
+                  }`}
+                >
+                  <div className="mb-10">
+                    <h4 className="text-2xl font-display font-bold uppercase mb-2">{tier.name}</h4>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-6">{tier.desc}</p>
+                    <div className="text-4xl font-display font-bold text-brand-primary">{tier.price}</div>
+                  </div>
+
+                  <div className="space-y-4 mb-12 flex-grow">
+                    {tier.features.map(f => (
+                      <div key={f} className="flex items-center gap-4">
+                        <Check className="w-4 h-4 text-emerald-500" />
+                        <span className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-tight">{f}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button 
+                    onClick={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })}
+                    className={`w-full py-5 rounded-2xl font-bold uppercase tracking-widest text-[10px] transition-all ${
+                      i === 1 ? 'bg-brand-primary text-white shadow-xl' : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                    }`}
+                  >
+                    Select Mission
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Trust Bar */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pt-24 border-t border-slate-100 dark:border-white/5">
              {[
                { icon: Shield, label: 'Enterprise Security', text: 'Military-grade encryption for all client data modules.' },
                { icon: Cpu, label: 'Compute Power', text: 'Stateless architecture scaling across global edge nodes.' },
