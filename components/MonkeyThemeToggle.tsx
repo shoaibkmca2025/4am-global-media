@@ -13,16 +13,15 @@ const MonkeyThemeToggle: React.FC<{ compact?: boolean }> = ({ compact = false })
 
   // Interaction values for the "swing" effect
   const mouseX = useMotionValue(0);
-  const smoothRotation = useSpring(useTransform(mouseX, [-50, 50], [-15, 15]), {
-    stiffness: 100,
-    damping: 10
+  const smoothRotation = useSpring(useTransform(mouseX, [-60, 60], [-18, 18]), {
+    stiffness: 120,
+    damping: 12
   });
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!containerRef.current || isPulling) return;
     const rect = containerRef.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
-    // Calculate offset from center (-50 to 50 roughly)
     const offset = e.clientX - centerX;
     mouseX.set(offset);
   };
@@ -36,19 +35,18 @@ const MonkeyThemeToggle: React.FC<{ compact?: boolean }> = ({ compact = false })
     if (isPulling) return;
     setIsPulling(true);
 
-    // Pull down animation for the rope and handle
+    // Pull down animation
     await pullControls.start({
-      y: 40,
-      transition: { duration: 0.15, ease: "easeOut" }
+      y: 45,
+      transition: { duration: 0.18, ease: "circOut" }
     });
 
-    // Toggle theme at the peak of the pull
     toggleTheme();
 
-    // Snap back animation with bouncy spring
+    // Snap back
     await pullControls.start({
       y: 0,
-      transition: { type: "spring", stiffness: 600, damping: 10 }
+      transition: { type: "spring", stiffness: 700, damping: 12 }
     });
 
     setIsPulling(false);
@@ -60,124 +58,123 @@ const MonkeyThemeToggle: React.FC<{ compact?: boolean }> = ({ compact = false })
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
-      className={`relative flex flex-col items-center select-none ${compact ? 'scale-75' : 'scale-100'}`}
-      style={{ height: '120px', width: '80px' }}
+      className={`relative flex flex-col items-center select-none z-50 ${compact ? 'scale-75' : 'scale-100'}`}
+      style={{ height: '140px', width: '100px' }}
     >
-      {/* HUD Telemetry (Shows on hover) */}
+      {/* HUD Telemetry */}
       <motion.div 
         initial={{ opacity: 0, x: 20 }}
         animate={{ 
           opacity: isHovered ? 1 : 0, 
-          x: isHovered ? 45 : 20 
+          x: isHovered ? 55 : 20 
         }}
-        className="absolute top-0 right-[-100px] pointer-events-none hidden lg:block z-50"
+        className="absolute top-4 right-[-110px] pointer-events-none hidden lg:block z-50"
       >
-        <div className="glass px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 flex flex-col gap-0.5 shadow-2xl">
-           <span className="text-[7px] font-mono font-bold text-slate-500 uppercase tracking-widest leading-none">LUMINANCE_NODE</span>
-           <span className={`text-[9px] font-mono font-bold uppercase ${theme === 'dark' ? 'text-brand-signal' : 'text-amber-500'}`}>
-             {theme === 'dark' ? 'MIDNIGHT' : 'DAYLIGHT'}
+        <div className="glass px-4 py-2 rounded-xl border border-slate-300 dark:border-white/10 flex flex-col gap-0.5 shadow-3xl">
+           <span className="text-[8px] font-mono font-bold text-slate-500 uppercase tracking-[0.2em] leading-none mb-1">OPTIC_SIGNAL</span>
+           <span className={`text-xs font-mono font-bold uppercase ${theme === 'dark' ? 'text-brand-signal' : 'text-amber-500'}`}>
+             {theme === 'dark' ? 'MIDNIGHT_MODE' : 'DAYLIGHT_MODE'}
            </span>
         </div>
       </motion.div>
 
-      {/* The Swinging Assembly (Arm + Monkey + Rope) */}
+      {/* The Swinging Assembly */}
       <motion.div
         style={{ 
           rotate: smoothRotation,
-          originY: "-40px" // Swing from the ceiling point
+          originY: "-50px" 
         }}
-        className="relative cursor-pointer flex flex-col items-center"
+        className="relative cursor-pointer flex flex-col items-center group/pull"
         onClick={handlePull}
       >
-        {/* Support Rope from "Ceiling" */}
-        <div className="absolute top-[-40px] left-1/2 -translate-x-1/2 w-[1px] h-[40px] bg-gradient-to-b from-transparent via-slate-400/30 to-slate-400/60" />
+        {/* Support Rope */}
+        <div className="absolute top-[-50px] left-1/2 -translate-x-1/2 w-[1.5px] h-[50px] bg-gradient-to-b from-transparent via-slate-400/40 to-slate-400/80" />
 
-        {/* Monkey Head - Sitting at the Anchor Point */}
-        <div className="relative group">
-          <svg width="64" height="64" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-2xl">
-            {/* Main Body/Face Shape */}
-            <circle cx="30" cy="30" r="22" fill={theme === 'dark' ? '#1E293B' : '#e2e8f0'} stroke={theme === 'dark' ? '#334155' : '#cbd5e1'} strokeWidth="1.5"/>
-            {/* Face Inner Area */}
-            <path d="M30 46C38.8366 46 46 38.8366 46 30C46 21.1634 38.8366 14 30 14C21.1634 14 14 21.1634 14 30C14 38.8366 21.1634 46 30 46Z" fill={theme === 'dark' ? '#0F172A' : '#f8fafc'} />
+        {/* Monkey Head */}
+        <div className="relative">
+          <svg width="70" height="70" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-3xl filter transition-all duration-300">
+            <circle cx="30" cy="30" r="24" fill={theme === 'dark' ? '#1E293B' : '#F1F5F9'} stroke={theme === 'dark' ? '#334155' : '#cbd5e1'} strokeWidth="1.5"/>
+            <path d="M30 48C40 48 48 40 48 30C48 20 40 12 30 12C20 12 12 20 12 30C12 40 20 48 30 48Z" fill={theme === 'dark' ? '#0F172A' : '#ffffff'} />
             
             {/* Interactive Eyes */}
             <motion.circle 
               animate={{ 
-                fill: theme === 'dark' ? '#00F0FF' : '#3B82F6',
-                r: isHovered ? 2.5 : 2,
-                boxShadow: theme === 'dark' ? '0 0 10px #00F0FF' : 'none'
+                fill: theme === 'dark' ? '#00F0FF' : '#2563EB',
+                r: isHovered ? 3 : 2.5,
               }}
-              cx="22" cy="28" r="2" 
+              cx="22" cy="28" r="2.5" 
             />
             <motion.circle 
               animate={{ 
-                fill: theme === 'dark' ? '#00F0FF' : '#3B82F6',
-                r: isHovered ? 2.5 : 2
+                fill: theme === 'dark' ? '#00F0FF' : '#2563EB',
+                r: isHovered ? 3 : 2.5,
               }}
-              cx="38" cy="28" r="2" 
+              cx="38" cy="28" r="2.5" 
             />
             
             {/* Mouth */}
             <motion.path 
-              animate={{ d: isHovered ? "M25 38 Q30 42 35 38" : "M26 38 Q30 39 34 38" }}
+              animate={{ d: isHovered ? "M24 40 Q30 45 36 40" : "M25 40 Q30 41 35 40" }}
               stroke={theme === 'dark' ? '#334155' : '#94a3b8'} 
-              strokeWidth="1.5" 
+              strokeWidth="2" 
               fill="none" 
               strokeLinecap="round" 
             />
             
             {/* Ears */}
-            <circle cx="10" cy="30" r="6" fill={theme === 'dark' ? '#1E293B' : '#cbd5e1'} />
-            <circle cx="50" cy="30" r="6" fill={theme === 'dark' ? '#1E293B' : '#cbd5e1'} />
+            <circle cx="8" cy="30" r="7" fill={theme === 'dark' ? '#1E293B' : '#E2E8F0'} />
+            <circle cx="52" cy="30" r="7" fill={theme === 'dark' ? '#1E293B' : '#E2E8F0'} />
           </svg>
         </div>
 
-        {/* The Vertical Pull Cord hanging from monkey */}
+        {/* The Vertical Pull Cord */}
         <motion.div
           animate={pullControls}
-          className="absolute left-1/2 -translate-x-1/2 top-[50px] flex flex-col items-center"
+          className="absolute left-1/2 -translate-x-1/2 top-[55px] flex flex-col items-center px-4"
         >
-          {/* Rope Cord Line */}
+          {/* Extended Hit Area */}
+          <div className="absolute inset-0 w-full h-[100px] cursor-pointer" />
+          
           <motion.div 
             style={{ originY: 0 }}
-            animate={{ height: isPulling ? 60 : 45 }}
-            className="w-[1.5px] bg-gradient-to-b from-slate-400 via-slate-500 to-slate-700 dark:from-slate-600 dark:via-slate-700 dark:to-slate-900 shadow-[0_0_8px_rgba(0,0,0,0.1)]" 
+            animate={{ height: isPulling ? 65 : 48 }}
+            className="w-[2px] bg-gradient-to-b from-slate-400 via-slate-500 to-slate-800 dark:from-slate-600 dark:via-slate-700 dark:to-slate-900 shadow-xl" 
           />
           
-          {/* Decorative Pull Handle (Bulbous base) */}
-          <div className="relative">
+          {/* Handle */}
+          <div className="relative group/handle">
             <motion.div 
               animate={{ 
-                scale: isPulling ? 0.8 : 1,
-                backgroundColor: theme === 'dark' ? '#00F0FF' : '#3B82F6',
-                boxShadow: theme === 'dark' ? '0 0 20px #00F0FF' : '0 0 15px rgba(59,130,246,0.3)'
+                scale: isPulling ? 0.75 : 1,
+                backgroundColor: theme === 'dark' ? '#00F0FF' : '#2563EB',
+                boxShadow: theme === 'dark' ? '0 0 25px #00F0FF' : '0 0 20px rgba(37,99,235,0.4)'
               }}
-              className="w-5 h-9 rounded-[1rem] border border-white/30 flex items-center justify-center transition-colors shadow-xl"
+              className="w-6 h-10 rounded-2xl border border-white/40 flex items-center justify-center transition-all shadow-2xl"
             >
-              <Zap className="w-2.5 h-2.5 text-white fill-white" />
+              <Zap className="w-3 h-3 text-white fill-white" />
             </motion.div>
             
-            {/* Holographic Signal Ring */}
+            {/* Interactive Pulse */}
             <motion.div 
               animate={{ 
-                scale: [1, 1.4, 1],
-                opacity: [0.4, 0, 0.4]
+                scale: [1, 1.5, 1],
+                opacity: [0.5, 0, 0.5]
               }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className={`absolute inset-[-6px] rounded-full border border-dashed ${theme === 'dark' ? 'border-brand-signal' : 'border-brand-primary'}`}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              className={`absolute inset-[-8px] rounded-full border border-dashed ${theme === 'dark' ? 'border-brand-signal' : 'border-brand-primary'}`}
             />
           </div>
         </motion.div>
       </motion.div>
 
-      {/* Global Flare Effect during transition */}
+      {/* Flare Transition */}
       <AnimatePresence>
         {isPulling && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-brand-primary/5 dark:bg-brand-signal/5 pointer-events-none z-[200] mix-blend-overlay"
+            className="fixed inset-0 bg-white/10 dark:bg-brand-signal/5 pointer-events-none z-[300] mix-blend-overlay"
           />
         )}
       </AnimatePresence>
